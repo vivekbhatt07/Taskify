@@ -1,10 +1,10 @@
 import { FC } from "react";
-import Tooltip, { TooltipProps } from "@mui/material/Tooltip";
+import Tooltip from "@mui/material/Tooltip";
 import IconButton from "../IconAction";
 
 interface TolltipIconActionProps {
   children: any;
-  position:
+  position?:
     | "bottom-end"
     | "bottom-start"
     | "bottom"
@@ -18,15 +18,21 @@ interface TolltipIconActionProps {
     | "top-start"
     | "top"
     | undefined;
+  title: String;
+  isActive?: Boolean;
 }
 
 const TolltipIconAction: FC<TolltipIconActionProps> = ({
   children,
   position,
+  title,
+  isActive,
 }) => {
   return (
-    <Tooltip title="Delete" arrow placement={position}>
-      <IconButton>{children}</IconButton>
+    <Tooltip title={title} arrow placement={position}>
+      <IconButton sx={{ backgroundColor: isActive ? "#7c3aed" : "#a8a29e" }}>
+        {children}
+      </IconButton>
     </Tooltip>
   );
 };
