@@ -8,7 +8,7 @@ const Dashboard: FC<DashboardProps> = () => {
   return (
     <div className="text-xl m-6">
       <TextButton>Click</TextButton>
-      <TolltipIconAction>
+      <TolltipIconAction position="top">
         <AddIcon />
       </TolltipIconAction>
     </div>
