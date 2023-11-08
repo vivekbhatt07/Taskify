@@ -1,12 +1,12 @@
 # Task Sync
 
-[Task-Sync]() - Task Managment App
+[Task-Sync](https://taskify-livid.vercel.app/) - Task Managment App
 
 ## How to install and run locally?
 
 ```
 $ git clone https://github.com/vivekbhatt07/Taskify
-$ cd TaskSync
+$ cd Taskify
 $ npm install
 $ npm run dev
 ```
