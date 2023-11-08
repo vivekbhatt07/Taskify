@@ -1,27 +1,35 @@
-# React + TypeScript + Vite
+# Task Sync
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[Task-Sync]() - Task Managment App
 
-Currently, two official plugins are available:
+## How to install and run locally?
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+```
+$ git clone https://github.com/vivekbhatt07/Taskify
+$ cd TaskSync
+$ npm install
+$ npm run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Features -
+
+1. **Task Board Layout:** A task board layout with four columns representing the stages: Ready, In Progress, Testing, and Done.
+2. **Drag-and-Drop:** The ability to drag and drop tasks from one group to another. Tasks are visually draggable and snap into the appropriate stage when dropped.
+3. **Task Cards:** A task card within its respective group. The task card displays the task's name, assignee, priority, and any other relevant information.
+4. **Task Metrics:** Visual metrics for each group, showing the total number of tasks in that stage, along with the breakdown of tasks based on their priorities (Urgent, High, Medium, Low).
+5. Search functionality, which will search by task name from any group (Ready/In progress/Testing/Done)
+6. Filters like filter by Start/End dates, filter by assignee, filter by severity of the task
+7. Unique badges to each task based on severity (High/Medium/Low)
+8. Light mode and dark mode
+
+## Technology Used -
+
+- React JS
+- React Context API + useReducer
+- React Router v6
+- Tailwind CSS
+- react-beautiful-dnd
+- react-chartjs-2
+- MUI Icons
+- MUI Components
+- Axios
