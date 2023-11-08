@@ -1,18 +1,11 @@
 import { FC } from "react";
-import { IconButton, TextButton, TolltipIconAction } from "../../components";
-import AddIcon from "@mui/icons-material/Add";
+// import { IconButton, TextButton, TolltipIconAction } from "../../components";
+import { PageContainer } from "../../layout";
 
 interface DashboardProps {}
 
 const Dashboard: FC<DashboardProps> = () => {
-  return (
-    <div className="text-xl m-6">
-      <TextButton>Click</TextButton>
-      <TolltipIconAction position="top">
-        <AddIcon />
-      </TolltipIconAction>
-    </div>
-  );
+  return <PageContainer>DashBoard</PageContainer>;
 };
 
 export default Dashboard;
