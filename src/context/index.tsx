@@ -1,3 +1,3 @@
-import { ThemeProvider, useTheme } from "./ThemeContext";
+import { ModeProvider, useMode } from "./ModeContext";
 
-export { ThemeProvider, useTheme };
+export { ModeProvider, useMode };

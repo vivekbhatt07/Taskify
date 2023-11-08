@@ -1,12 +1,12 @@
 import { Link, NavLink } from "react-router-dom";
-import { useTheme } from "../../context";
+import { useMode } from "../../context";
 import { TolltipIconAction, IconButton } from "../../components";
 import { Dashboard, DonutSmall, TableChart, Person } from "@mui/icons-material";
 
 import "./Header.css";
 
 const Header = () => {
-  const { isDarkTheme, toggleTheme } = useTheme();
+  const { isDarkTheme, toggleTheme } = useMode();
 
   const headerNavList = [
     { title: "Dashboard", reach: "/", icon: <Dashboard /> },
@@ -24,7 +24,7 @@ const Header = () => {
         <div className="flex gap-3">
           {headerNavList.map((item, index) => {
             return (
-              <NavLink to={item.reach}>
+              <NavLink to={item.reach} key={index}>
                 {({ isActive }) => (
                   <TolltipIconAction
                     position={

@@ -9,14 +9,14 @@ import {
 
 type ToggleThemeType = (isDarkMode: boolean) => void;
 
-interface ThemeContextType {
+interface ModeContextType {
   isDarkTheme: boolean;
   toggleTheme: ToggleThemeType;
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const ModeContext = createContext<ModeContextType | undefined>(undefined);
 
-const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
+const ModeProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [isDarkTheme, setIsDarkTheme] = useState(
     localStorage.getItem("mode") === "dark" ? true : false
   );
@@ -38,18 +38,18 @@ const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
   }, [isDarkTheme]);
 
   return (
-    <ThemeContext.Provider value={{ isDarkTheme, toggleTheme }}>
+    <ModeContext.Provider value={{ isDarkTheme, toggleTheme }}>
       {children}
-    </ThemeContext.Provider>
+    </ModeContext.Provider>
   );
 };
 
-const useTheme = () => {
-  const context = useContext(ThemeContext);
+const useMode = () => {
+  const context = useContext(ModeContext);
   if (!context) {
-    throw new Error("useTheme must be used within a ThemeProvider");
+    throw new Error("useMode must be used within a ModeProvider");
   }
   return context;
 };
 
-export { useTheme, ThemeProvider };
+export { useMode, ModeProvider };
