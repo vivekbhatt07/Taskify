@@ -19,13 +19,15 @@ interface ProjectAction {
   type: "SET_PROJECTS" | "ADD_PROJECT" | "DELETE_PROJECT" | "UPDATE_PROJECT";
   payload?: any;
 }
-interface ProjectState {
-  projectList: Project[];
-}
+
 interface Project {
   _id: string;
   title: string;
   description: string;
+}
+
+interface ProjectState {
+  projectList: Project[];
 }
 
 interface ProjectContextType {
