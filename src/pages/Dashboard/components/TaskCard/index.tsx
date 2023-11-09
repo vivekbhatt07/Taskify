@@ -1,8 +1,9 @@
 import { FC, ReactNode, useState } from "react";
-import IconAction from "../../../../components/buttons/IconAction";
+import { TolltipIconAction } from "../../../../components";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { ModalProvider } from "../../../../components";
 import TaskForm from "../../../../components/TaskForm";
+import { Chip } from "@mui/material";
 
 interface TaskCardProps {
   children?: ReactNode;
@@ -46,18 +47,20 @@ const TaskCard: FC<TaskCardProps> = ({
         isOpen={isEditTaskModalOpen}
         title="Edit Task"
         OpenAction={
-          <IconAction
-            className="absolute right-0 top-0"
+          <TolltipIconAction
+            title="Edit Task"
+            position="right"
+            // className="absolute right-0 top-0"
             onClick={() => {
-              setIsEditTaskModalOpen(true);
+              openEditTaskModal();
             }}
           >
             <MoreVertIcon />
-          </IconAction>
+          </TolltipIconAction>
         }
         closeModal={closeEditTaskModal}
       >
-        <TaskForm />
+        <TaskForm closeAction={closeEditTaskModal} isEdit />
       </ModalProvider>
 
       <h3 className="text-lg">{title}</h3>
@@ -71,11 +74,7 @@ const TaskCard: FC<TaskCardProps> = ({
       </div>
       <div className="flex flex-wrap gap-2">
         {labels.map((label, index) => {
-          return (
-            <div key={index} className="bg-[]">
-              {label}
-            </div>
-          );
+          return <Chip key={index} label={label} />;
         })}
       </div>
     </div>

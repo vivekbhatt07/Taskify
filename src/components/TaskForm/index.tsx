@@ -12,16 +12,22 @@ import { TextButton } from "../../components";
 
 interface TaskFormProps {
   children: ReactNode;
+  closeAction: () => void;
+  isEdit: Boolean;
 }
 
-const TaskForm: FC<TaskFormProps> = ({ children }): ReactNode => {
+const TaskForm: FC<TaskFormProps> = ({
+  children,
+  closeAction,
+  isEdit,
+}): ReactNode => {
   const [taskFormData, setTaskFormData] = useState({
-    title: "",
-    description: "",
-    dueDate: "",
-    priority: "Low",
-    variant: "ToDo",
-    labels: [],
+    title: isEdit ? "" : "",
+    description: isEdit ? "" : "",
+    dueDate: isEdit ? "" : "",
+    priority: isEdit ? "Low" : "Low",
+    variant: isEdit ? "ToDo" : "ToDo",
+    labels: isEdit ? [] : [],
   });
 
   const handleTaskFormDataInput = (e) => {
@@ -39,9 +45,14 @@ const TaskForm: FC<TaskFormProps> = ({ children }): ReactNode => {
     }));
   }
 
+  const handleTaskFormDataSubmit = (e) => {
+    e.preventDefault();
+    console.log(taskFormData);
+  };
+
   return (
     <div>
-      <form className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4" onSubmit={handleTaskFormDataSubmit}>
         {/* NAME */}
         <TextField
           variant="outlined"
@@ -111,7 +122,9 @@ const TaskForm: FC<TaskFormProps> = ({ children }): ReactNode => {
           }}
         />
         <div>
-          <TextButton>Update</TextButton>
+          <TextButton onClick={closeAction}>
+            {isEdit ? "Update" : "Add"}
+          </TextButton>
         </div>
       </form>
     </div>

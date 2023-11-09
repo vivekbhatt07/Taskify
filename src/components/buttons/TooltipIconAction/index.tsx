@@ -20,6 +20,8 @@ interface TolltipIconActionProps {
     | undefined;
   title: String;
   isActive?: Boolean;
+  onClick: () => void;
+  className?: String;
 }
 
 const TolltipIconAction: FC<TolltipIconActionProps> = ({
@@ -27,10 +29,15 @@ const TolltipIconAction: FC<TolltipIconActionProps> = ({
   position,
   title,
   isActive,
+  onClick,
+  className,
 }) => {
   return (
     <Tooltip title={title} arrow placement={position}>
-      <IconButton sx={{ backgroundColor: isActive ? "#7c3aed" : "#a8a29e" }}>
+      <IconButton
+        sx={{ backgroundColor: isActive ? "#7c3aed" : "#a8a29e" }}
+        onClick={onClick}
+      >
         {children}
       </IconButton>
     </Tooltip>
