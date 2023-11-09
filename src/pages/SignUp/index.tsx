@@ -5,8 +5,10 @@ import { TextButton } from "../../Components";
 
 import { PageContainer } from "../../layout";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../context";
 
 const SignUp = () => {
+  const { state, signUpUserHandler } = useUser();
   const navigate = useNavigate();
 
   const [signUpFormData, setSignUpFormData] = useState({
@@ -25,7 +27,20 @@ const SignUp = () => {
     });
   };
 
-  const handleSignUpSubmit = () => {};
+  const handleSignUpSubmit = (e) => {
+    e.preventDefault();
+    const { confirmPasword, ...rest } = signUpFormData;
+    const signUpData = rest;
+    signUpUserHandler(signUpData);
+    setSignUpFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      username: "",
+      password: "",
+      confirmPasword: "",
+    });
+  };
 
   return (
     <PageContainer>
@@ -50,6 +65,7 @@ const SignUp = () => {
                   value={signUpFormData.firstName}
                   onChange={handleSignUpFormInputs}
                   type="text"
+                  required
                 />
 
                 {/* LAST NAME */}
@@ -61,6 +77,7 @@ const SignUp = () => {
                   value={signUpFormData.lastName}
                   onChange={handleSignUpFormInputs}
                   type="text"
+                  required
                 />
               </div>
 
@@ -71,6 +88,7 @@ const SignUp = () => {
                 value={signUpFormData.email}
                 onChange={handleSignUpFormInputs}
                 type="email"
+                required
               />
               {/* USERNAME */}
               <TextField
@@ -79,6 +97,7 @@ const SignUp = () => {
                 value={signUpFormData.username}
                 onChange={handleSignUpFormInputs}
                 type="text"
+                required
               />
               <div className="flex gap-2">
                 {/* PASSWORD */}
@@ -89,6 +108,7 @@ const SignUp = () => {
                   value={signUpFormData.password}
                   onChange={handleSignUpFormInputs}
                   type="text"
+                  required
                 />
                 {/* CONFIRM PASSWORD */}
                 <TextField
@@ -98,27 +118,12 @@ const SignUp = () => {
                   value={signUpFormData.confirmPasword}
                   onChange={handleSignUpFormInputs}
                   type="text"
+                  required
                 />
               </div>
             </div>
             <div className="flex justify-center">
               <TextButton type="submit">Sign up</TextButton>
-              {/* <TextButton
-                className="signUpTestButton"
-                type="button"
-                onClick={() => {
-                  setSignUpFormData({
-                    firstName: "Vivek",
-                    lastName: "Bhatt",
-                    email: "vivekbhatt618@gmail.com",
-                    username: "vivek07",
-                    password: "HelloWorld07",
-                    confirmPasword: "HelloWorld07",
-                  });
-                }}
-              >
-                Test
-              </TextButton> */}
             </div>
           </div>
         </form>

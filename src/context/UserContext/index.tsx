@@ -8,6 +8,7 @@ import {
   useReducer,
   Dispatch,
 } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   getAllUsersApiResponse,
@@ -26,6 +27,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 const initialUserState = {
   userList: [],
   user: null,
+  token: null,
 };
 
 const userReducer = (state, { type, payload }) => {
@@ -35,7 +37,7 @@ const userReducer = (state, { type, payload }) => {
     }
 
     case "SET_USER": {
-      return { ...state, user: payload };
+      return { ...state, user: payload.userData, token: payload.token };
     }
   }
 };
@@ -43,13 +45,12 @@ const userReducer = (state, { type, payload }) => {
 const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialUserState);
   const [isLoading, setIsLoading] = useState<Boolean>(false);
-
+  const navigate = useNavigate();
   const getAllUsersHandler = async () => {
     setIsLoading(true);
     try {
       const response = await getAllUsersApiResponse();
       if (response.status === 201) {
-        console.log(response.data.users);
         dispatch({ type: "SET_USERS", payload: response.data.users });
       }
     } catch (error) {
@@ -59,12 +60,23 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const logInUserHandler = async (user) => {
+  const logInUserHandler = async (email: String, password: String) => {
     setIsLoading(true);
     try {
-      const response = await logInUserApiResponse(user);
+      const response = await logInUserApiResponse(email, password);
+      console.log(response);
       if (response.status === 201) {
-        // dispatch({ type: "SET_USERS", payload: response.data.users });
+        dispatch({
+          type: "SET_USER",
+          payload: {
+            userData: response.data.user,
+            token: response.data.token,
+          },
+        });
+        console.log(state.token);
+      }
+      if (state.token) {
+        navigate("/");
       }
     } catch (error) {
       console.error(error);
@@ -73,12 +85,22 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const signInUserHandler = async (user) => {
+  const signUpUserHandler = async (user) => {
     setIsLoading(true);
     try {
-      const response = await signInUserHandler(user);
+      const response = await signUpUserApiResponse(user);
+
       if (response.status === 201) {
-        // dispatch({ type: "SET_USERS", payload: response.data.users });
+        dispatch({
+          type: "SET_USER",
+          payload: {
+            userData: response.data.user,
+            token: response.data.token,
+          },
+        });
+        if (state.token) {
+          navigate("/");
+        }
       }
     } catch (error) {
       console.error(error);
@@ -93,6 +115,12 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     getAllUsersHandler();
   }, []);
 
+  useEffect(() => {
+    if (state.token) {
+      navigate("/");
+    }
+  }, [state.token]);
+
   return (
     <UserContext.Provider
       value={{
@@ -100,7 +128,7 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
         dispatch,
         isLoading,
         logInUserHandler,
-        signInUserHandler,
+        signUpUserHandler,
       }}
     >
       {children}

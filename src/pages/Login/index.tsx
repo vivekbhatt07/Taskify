@@ -8,10 +8,7 @@ import { useUser } from "../../context";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { state } = useUser();
-  //   const { isDarkTheme } = useTheme();
-  //   const { logInHandler } = useAuth();
-  //   const { state } = usePost();
+  const { state, logInUserHandler } = useUser();
 
   const [isLoginGuestOpen, setIsLoginGuestOpen] = useState(false);
 
@@ -21,7 +18,6 @@ const Login = () => {
   const [logInFormData, setLogInFormData] = useState({
     email: "",
     password: "",
-    username: "",
   });
 
   const handleLogInFormInputs = (event) => {
@@ -31,20 +27,20 @@ const Login = () => {
     });
   };
 
-  const isLoginCredentials = state.userList.find((currentUser) => {
-    return (
-      currentUser.username == logInFormData.username &&
-      currentUser.password == logInFormData.password
-    );
-  });
+  // const isLoginCredentials = state.userList.find((currentUser) => {
+  //   return (
+  //     currentUser.email == logInFormData.email &&
+  //     currentUser.password == logInFormData.password
+  //   );
+  // });
 
   const handleLogInFormSubmit = (event) => {
     event.preventDefault();
-    // if (isLoginCredentials) {
-    //   logInHandler(logInData.logInName, logInData.logInPassword);
-    // } else {
-    //
-    // }
+    logInUserHandler(logInFormData.email, logInFormData.password);
+    setLogInFormData({
+      email: "",
+      password: "",
+    });
   };
 
   return (
@@ -57,10 +53,10 @@ const Login = () => {
             onSubmit={handleLogInFormSubmit}
           >
             <TextField
-              name="username"
-              label="UserName"
+              name="email"
+              label="Email"
               type="text"
-              value={logInFormData.username}
+              value={logInFormData.email}
               onChange={handleLogInFormInputs}
               required
             />
@@ -95,7 +91,7 @@ const Login = () => {
                 }
               >
                 <div className="h-[400px] overflow-y-scroll">
-                  {state.userList.map((current) => {
+                  {/* {state.userList.map((current) => {
                     return (
                       <article
                         key={current._id}
@@ -111,7 +107,7 @@ const Login = () => {
                         </div>
                       </article>
                     );
-                  })}
+                  })} */}
                 </div>
               </ModalProvider>
             </div>

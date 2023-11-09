@@ -1,10 +1,12 @@
-import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { useUser } from "../context";
 
-export const RequiresAuth = ({ children }) => {
+const RequiresAuth = ({ children }) => {
   const location = useLocation();
-  const token = useSelector((state) => state?.auth?.token);
-  return token ? (
+  const { state } = useUser();
+  console.log(state);
+
+  return state.token ? (
     children
   ) : (
     <Navigate to="/login" state={{ from: location?.pathname }} replace />
