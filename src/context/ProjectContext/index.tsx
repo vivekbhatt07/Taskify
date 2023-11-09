@@ -15,10 +15,26 @@ import {
   addProjectApiResponse,
   updateProjectApiResponse,
 } from "../../apiResponse/projectApiResponse";
+interface ProjectAction {
+  type: "SET_PROJECTS" | "ADD_PROJECT" | "DELETE_PROJECT" | "UPDATE_PROJECT";
+  payload?: any;
+}
+interface ProjectState {
+  projectList: Project[];
+}
+interface Project {
+  _id: string;
+  title: string;
+  description: string;
+}
 
 interface ProjectContextType {
-  state: any;
-  dispatch: () => void;
+  state: ProjectState;
+  isLoading: boolean;
+  dispatch: Dispatch<ProjectAction>;
+  addProjectHandler: (project: Project) => void;
+  deleteProjectHandler: (projectId: string) => void;
+  updateProjectHandler: (projectId: string, project: Project) => void;
 }
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
@@ -27,7 +43,10 @@ const initialProjectState = {
   projectList: [],
 };
 
-const projectReducer = (state, { type, payload }) => {
+const projectReducer = (
+  state: ProjectState,
+  { type, payload }: ProjectAction
+) => {
   switch (type) {
     case "SET_PROJECTS": {
       return { ...state, projectList: payload };
@@ -40,7 +59,7 @@ const projectReducer = (state, { type, payload }) => {
     case "DELETE_PROJECT": {
       return {
         ...state,
-        projectList: state.projectList.filter((project) => {
+        projectList: state.projectList.filter((project: Project) => {
           return project._id !== payload;
         }),
       };
@@ -49,7 +68,7 @@ const projectReducer = (state, { type, payload }) => {
     case "UPDATE_PROJECT": {
       return {
         ...state,
-        projectList: state.projectList.map((project) => {
+        projectList: state.projectList.map((project: Project) => {
           return project._id === payload._id ? payload : project;
         }),
       };
@@ -59,7 +78,7 @@ const projectReducer = (state, { type, payload }) => {
 
 const ProjectProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(projectReducer, initialProjectState);
-  const [isLoading, setIsLoading] = useState<Boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getAllProjectsHandler = async () => {
     setIsLoading(true);
@@ -75,7 +94,7 @@ const ProjectProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const addProjectHandler = async (project) => {
+  const addProjectHandler = async (project: Project) => {
     try {
       const response = await addProjectApiResponse(project);
       if (response.status === 201) {
@@ -100,7 +119,7 @@ const ProjectProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const updateProjectHandler = async (projectId: String, project) => {
+  const updateProjectHandler = async (projectId: String, project: Project) => {
     try {
       const response = await updateProjectApiResponse(projectId, project);
       if (response.status === 200) {
