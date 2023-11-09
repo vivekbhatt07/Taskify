@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import { useMode } from "../../context";
+import { useMode, useUser } from "../../context";
 import { TolltipIconAction, IconButton } from "../../components";
 import { Dashboard, DonutSmall, TableChart, Person } from "@mui/icons-material";
 
@@ -7,6 +7,7 @@ import "./Header.css";
 
 const Header = () => {
   const { isDarkTheme, toggleTheme } = useMode();
+  const { token } = useUser();
 
   const headerNavList = [
     { title: "Dashboard", reach: "/", icon: <Dashboard /> },
@@ -21,33 +22,37 @@ const Header = () => {
         <h1>
           <Link to="/">Taskify</Link>
         </h1>
-        <div className="flex gap-3">
-          {headerNavList.map((item, index) => {
-            return (
-              <NavLink to={item.reach} key={index}>
-                {({ isActive }) => (
-                  <TolltipIconAction
-                    position={
-                      index === 0
-                        ? "left"
-                        : index === headerNavList.length - 1
-                        ? "right"
-                        : "bottom"
-                    }
-                    title={item.title}
-                    isActive={isActive}
-                  >
-                    {item.icon}
-                  </TolltipIconAction>
-                )}
-              </NavLink>
-            );
-          })}
-        </div>
+        {token && (
+          <div className="flex gap-3">
+            {headerNavList.map((item, index) => {
+              return (
+                <NavLink to={item.reach} key={index}>
+                  {({ isActive }) => (
+                    <TolltipIconAction
+                      position={
+                        index === 0
+                          ? "left"
+                          : index === headerNavList.length - 1
+                          ? "right"
+                          : "bottom"
+                      }
+                      title={item.title}
+                      isActive={isActive}
+                    >
+                      {item.icon}
+                    </TolltipIconAction>
+                  )}
+                </NavLink>
+              );
+            })}
+          </div>
+        )}
         <div className="flex gap-3 items-center">
-          <IconButton>
-            <Person />
-          </IconButton>
+          {token && (
+            <IconButton>
+              <Person />
+            </IconButton>
+          )}
           <button
             className={`mode ${isDarkTheme ? "dark" : "light"}-mode`}
             onClick={() => toggleTheme(!isDarkTheme)}
