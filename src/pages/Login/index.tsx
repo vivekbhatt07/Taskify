@@ -51,9 +51,7 @@ const Login = () => {
     <PageContainer>
       <div className="max-w-xs m-auto md:max-w-sm lg:w-[24rem] border p-6 rounded-lg flex flex-col gap-10 md:mt-16">
         <div className="flex w-full flex-col dark:bg-stone-900 gap-6">
-          <h1 className="cursor-pointer text-center text-2xl" role="button">
-            Taskify Login
-          </h1>
+          <h1 className="cursor-pointer text-center text-2xl">Taskify Login</h1>
           <form
             className="flex flex-col gap-4"
             onSubmit={handleLogInFormSubmit}
