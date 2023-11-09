@@ -1,4 +1,5 @@
 import { FC, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   IconButton,
   TolltipIconAction,
@@ -12,6 +13,8 @@ import TaskForm from "../../../../components/TaskForm";
 interface DashboardDetailProps {}
 
 const DashboardDetail: FC<DashboardDetailProps> = () => {
+  const { projectId } = useParams();
+
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState<Boolean>(false);
 
   const openAddTaskModal = () => setIsAddTaskModalOpen(true);

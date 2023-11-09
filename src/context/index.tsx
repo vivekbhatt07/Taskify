@@ -1,3 +1,3 @@
 import { ModeProvider, useMode } from "./ModeContext";
-
-export { ModeProvider, useMode };
+import { ProjectProvider, useProject } from "./ProjectContext";
+export { ModeProvider, useMode, ProjectProvider, useProject };

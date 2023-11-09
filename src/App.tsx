@@ -28,7 +28,7 @@ function App() {
           <Route element={<Dashboard />} path="/" />
           <Route element={<Metrics />} path="/metrics" />
           <Route element={<Table />} path="/table" />
-          <Route element={<DashboardDetail />} path="/dashboardDetail" />
+          <Route element={<DashboardDetail />} path="/:projectId" />
         </Routes>
       </ThemeProvider>
     </div>
