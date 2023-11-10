@@ -12,25 +12,47 @@ import { useNavigate } from "react-router-dom";
 
 import {
   getAllUsersApiResponse,
-  getUserApiResponse,
   logInUserApiResponse,
   signUpUserApiResponse,
 } from "../../apiResponse/userApiResponse";
 
+interface User {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  password: string;
+}
+
+interface UserAction {
+  type: "SET_USERS" | "SET_USER";
+  payload?: any;
+}
+
+interface UserState {
+  userList: User[];
+  user: User;
+  token: string;
+}
+
 interface UserContextType {
   state: any;
-  dispatch: () => void;
+  dispatch: Dispatch<UserAction>;
+  isLoading: boolean;
+  logInUserHandler: (email: string, password: string) => void;
+  signUpUserHandler: (user: User) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 const initialUserState = {
   userList: [],
-  user: null,
-  token: null,
+  user: JSON.parse(localStorage.getItem("userCredentials"))?.user,
+  token: JSON.parse(localStorage.getItem("userCredentials"))?.token,
 };
 
-const userReducer = (state, { type, payload }) => {
+const userReducer = (state: UserState, { type, payload }: UserAction) => {
   switch (type) {
     case "SET_USERS": {
       return { ...state, userList: payload };
@@ -44,7 +66,7 @@ const userReducer = (state, { type, payload }) => {
 
 const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialUserState);
-  const [isLoading, setIsLoading] = useState<Boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const getAllUsersHandler = async () => {
     setIsLoading(true);
@@ -60,12 +82,18 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const logInUserHandler = async (email: String, password: String) => {
+  const logInUserHandler = async (email: string, password: string) => {
     setIsLoading(true);
     try {
       const response = await logInUserApiResponse(email, password);
-      console.log(response);
       if (response.status === 201) {
+        localStorage.setItem(
+          "userCredentials",
+          JSON.stringify({
+            user: response.data.user,
+            token: response.data.token,
+          })
+        );
         dispatch({
           type: "SET_USER",
           payload: {
@@ -73,7 +101,6 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
             token: response.data.token,
           },
         });
-        console.log(state.token);
       }
       if (state.token) {
         navigate("/");
@@ -85,7 +112,7 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const signUpUserHandler = async (user) => {
+  const signUpUserHandler = async (user: User) => {
     setIsLoading(true);
     try {
       const response = await signUpUserApiResponse(user);
@@ -108,8 +135,6 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
       setIsLoading(false);
     }
   };
-
-  console.log(state);
 
   useEffect(() => {
     getAllUsersHandler();

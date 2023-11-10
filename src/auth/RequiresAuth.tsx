@@ -1,7 +1,8 @@
+import { FC, ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useUser } from "../context";
 
-const RequiresAuth = ({ children }) => {
+const RequiresAuth: FC<{ children: ReactNode }> = ({ children }) => {
   const location = useLocation();
   const { state } = useUser();
   console.log(state);

@@ -1,36 +1,43 @@
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode, useState, ChangeEvent, FormEvent } from "react";
 import { TextField } from "@mui/material";
 
 import { TextButton } from "../../components";
 import { useProject } from "../../context";
 
+import { Project } from "../../types";
+
+interface ProjectFormDataType {
+  title: string;
+  description: string;
+}
+
 interface ProjectFormProps {
   children: ReactNode;
   closeAction: () => void;
   isEdit: Boolean;
+  projectData: Project;
 }
 
 const ProjectForm: FC<ProjectFormProps> = ({
-  children,
   closeAction,
   isEdit,
   projectData,
 }): ReactNode => {
   const { updateProjectHandler, addProjectHandler } = useProject();
 
-  const [projectFormData, setProjectFormData] = useState({
+  const [projectFormData, setProjectFormData] = useState<ProjectFormDataType>({
     title: isEdit ? projectData.title : "",
     description: isEdit ? projectData.description : "",
   });
 
-  const handleProjectFormDataInput = (e) => {
+  const handleProjectFormDataInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProjectFormData((prevProjectFormData) => {
       return { ...prevProjectFormData, [name]: value };
     });
   };
 
-  const handleProjectFormDataSubmit = (e) => {
+  const handleProjectFormDataSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (isEdit) {
       updateProjectHandler(projectData._id, projectFormData);

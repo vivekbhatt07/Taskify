@@ -7,21 +7,16 @@ import { Chip } from "@mui/material";
 
 interface TaskCardProps {
   children?: ReactNode;
-  title: String;
-  description: String;
-  dueDate: String;
-  priority: "Low" | "Medium" | "High";
-  labels: String[];
+  taskData: {
+    title: String;
+    description: String;
+    dueDate: String;
+    priority: "Low" | "Medium" | "High";
+    labels: String[];
+  };
 }
 
-const TaskCard: FC<TaskCardProps> = ({
-  children,
-  title,
-  description,
-  dueDate,
-  priority,
-  labels,
-}) => {
+const TaskCard: FC<TaskCardProps> = ({ children, taskData }) => {
   const [isEditTaskModalOpen, setIsEditTaskModalOpen] =
     useState<Boolean>(false);
 
@@ -30,7 +25,7 @@ const TaskCard: FC<TaskCardProps> = ({
 
   let priorityColor;
 
-  switch (priority) {
+  switch (taskData?.priority) {
     case "Low":
       priorityColor = "#15803d";
       break;
@@ -63,17 +58,17 @@ const TaskCard: FC<TaskCardProps> = ({
         <TaskForm closeAction={closeEditTaskModal} isEdit />
       </ModalProvider>
 
-      <h3 className="text-lg">{title}</h3>
-      <p className="text-sm">{description}</p>
-      <div>{dueDate}</div>
+      <h3 className="text-lg">{taskData?.title}</h3>
+      <p className="text-sm">{taskData?.description}</p>
+      <div>{taskData?.dueDate}</div>
       <div
         style={{ backgroundColor: priorityColor }}
         className="rounded-full py-[2px] px-3 inline-block text-sm"
       >
-        {priority}
+        {taskData?.priority}
       </div>
       <div className="flex flex-wrap gap-2">
-        {labels.map((label, index) => {
+        {taskData?.labels.map((label, index) => {
           return <Chip key={index} label={label} />;
         })}
       </div>

@@ -31,7 +31,6 @@ const TolltipIconAction: FC<TolltipIconActionProps> = ({
   title,
   isActive,
   onClick,
-  className,
   iconBtnSx,
 }) => {
   return (

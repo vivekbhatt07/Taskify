@@ -1,4 +1,3 @@
-import React from "react";
 import Lottie from "lottie-react";
 import LoaderLottie from "../../../Assets/Lottie/LoaderLottie.json";
 
