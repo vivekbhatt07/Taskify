@@ -1,7 +1,7 @@
 import { Button, ButtonProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-const TextAction = styled(Button)<ButtonProps>(({ theme }) => ({
+const TextAction = styled(Button)<ButtonProps>(() => ({
   color: "#fff",
   backgroundColor: "#7c3aed",
   fontWeight: "400",

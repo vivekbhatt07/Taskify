@@ -1,10 +1,11 @@
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode, useState, ChangeEvent } from "react";
 import {
   TextField,
   InputLabel,
   MenuItem,
   FormControl,
   Select,
+  SelectChangeEvent,
 } from "@mui/material";
 
 import AutoCompleteWithChips from "../AutoCompleteWithChips";
@@ -30,14 +31,14 @@ const TaskForm: FC<TaskFormProps> = ({
     labels: isEdit ? [] : [],
   });
 
-  const handleTaskFormDataInput = (e) => {
+  const handleTaskFormDataInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setTaskFormData((prevTaskFormData) => {
       return { ...prevTaskFormData, [name]: value };
     });
   };
 
-  function handleTagsChange(event) {
+  function handleTagsChange(event: { name: string; value: string[] }) {
     const { name, value } = event;
     setTaskFormData((prevTaskFormData) => ({
       ...prevTaskFormData,

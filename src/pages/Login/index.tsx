@@ -2,7 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TextField } from "@mui/material";
 
-import { ModalProvider, TextButton } from "../../Components";
+import {
+  ModalProvider,
+  TextButton,
+  DarkLoader,
+  LightLoader,
+} from "../../Components";
 import { PageContainer } from "../../layout";
 import { useUser } from "../../context";
 
@@ -72,6 +77,7 @@ const Login = () => {
 
             <div className="flex justify-between">
               <TextButton type="submit" className="basis-1/2">
+                {/* {state.token ? "Log in" : <DarkLoader />} */}
                 Log in
               </TextButton>
               <ModalProvider

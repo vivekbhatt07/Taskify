@@ -1,7 +1,7 @@
 import { IconButton, IconButtonProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-const IconAction = styled(IconButton)<IconButtonProps>(({ theme }) => ({
+const IconAction = styled(IconButton)<IconButtonProps>(() => ({
   color: "#fff",
   backgroundColor: "#a8a29e",
   fontWeight: "400",

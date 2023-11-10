@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 
 import {
   getAllUsersApiResponse,
-  getUserApiResponse,
   logInUserApiResponse,
   signUpUserApiResponse,
 } from "../../apiResponse/userApiResponse";
@@ -49,8 +48,8 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 const initialUserState = {
   userList: [],
-  user: null,
-  token: null,
+  user: JSON.parse(localStorage.getItem("userCredentials"))?.user,
+  token: JSON.parse(localStorage.getItem("userCredentials"))?.token,
 };
 
 const userReducer = (state: UserState, { type, payload }: UserAction) => {
@@ -87,8 +86,14 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     setIsLoading(true);
     try {
       const response = await logInUserApiResponse(email, password);
-      console.log(response);
       if (response.status === 201) {
+        localStorage.setItem(
+          "userCredentials",
+          JSON.stringify({
+            user: response.data.user,
+            token: response.data.token,
+          })
+        );
         dispatch({
           type: "SET_USER",
           payload: {
@@ -96,7 +101,6 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
             token: response.data.token,
           },
         });
-        console.log(state.token);
       }
       if (state.token) {
         navigate("/");
@@ -131,8 +135,6 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
       setIsLoading(false);
     }
   };
-
-  console.log(state);
 
   useEffect(() => {
     getAllUsersHandler();

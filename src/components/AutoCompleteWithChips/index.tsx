@@ -1,9 +1,18 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useState, KeyboardEvent } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import { debounce } from "@mui/material/utils";
 
-export default function AutoCompleteWithTags(props) {
+interface AutoCompleteWithTagsProps {
+  type?: "text";
+  tags?: string[];
+  label?: string;
+  placeholder?: string;
+  values: string[];
+  onTagUpdate?: (updatedTags: string[]) => void;
+  disabled?: boolean;
+}
+
+export default function AutoCompleteWithTags(props: AutoCompleteWithTagsProps) {
   const {
     type = "text",
     tags = [],
@@ -14,10 +23,10 @@ export default function AutoCompleteWithTags(props) {
     disabled,
   } = props;
 
-  const [inputValue, setInputValue] = React.useState("");
-  const [options, setOptions] = React.useState(tags);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [options, setOptions] = useState<string[]>(tags);
 
-  const customInputTagHandler = (event, value) => {
+  const customInputTagHandler = (event: any, value: string[]) => {
     let latestValue = value.at(-1);
     if (type === "number") latestValue = parseFloat(latestValue);
     if (typeof value.at(-1) === "string") {
@@ -27,13 +36,12 @@ export default function AutoCompleteWithTags(props) {
     }
   };
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: KeyboardEvent) => {
     switch (event.key) {
       case "Tab": {
         if (inputValue.length > 0) {
           event.preventDefault();
           customInputTagHandler(event, values.concat([inputValue]));
-          //reset input value after adding tag
           setInputValue("");
         }
         break;

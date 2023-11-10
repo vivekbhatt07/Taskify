@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   IconButton,
@@ -9,10 +9,13 @@ import { PageContainer } from "../../../../layout";
 import { TaskCard, TaskColumn } from "../../components";
 import { Add } from "@mui/icons-material";
 import TaskForm from "../../../../components/TaskForm";
+import { useProject } from "../../../../context";
 
 interface DashboardDetailProps {}
 
 const DashboardDetail: FC<DashboardDetailProps> = () => {
+  const { state, dispatch, getProjectDataHandler } = useProject();
+
   const { projectId } = useParams();
 
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState<Boolean>(false);
@@ -25,6 +28,11 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
     gridTemplateColumns: "repeat(3, 1fr)",
     gap: "16px",
   };
+
+  useEffect(() => {
+    getProjectDataHandler(projectId);
+    dispatch({ type: "SET_PROJECT", payload: projectId });
+  }, []);
 
   return (
     <PageContainer>
@@ -48,73 +56,19 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
           </ModalProvider>
         </div>
         <TaskColumn columnType="To Do" columnColor="#0891b2">
-          <TaskCard
-            title="UI/UX"
-            description="Replicate UI of Dashboard"
-            dueDate="12 September"
-            priority="Low"
-            labels={["easy", "style"]}
-          />
-          <TaskCard
-            title="UI/UX"
-            description="Replicate UI of Dashboard"
-            dueDate="12 September"
-            priority="Medium"
-            labels={["easy", "style"]}
-          />
-          <TaskCard
-            title="UI/UX"
-            description="Replicate UI of Dashboard"
-            dueDate="12 September"
-            priority="High"
-            labels={["easy", "style"]}
-          />
+          {state?.taskListData?.toDoList.map((task) => {
+            return <TaskCard taskData={task} />;
+          })}
         </TaskColumn>
         <TaskColumn columnType="In Progress" columnColor="#f59e0b">
-          <TaskCard
-            title="UI/UX"
-            description="Replicate UI of Dashboard"
-            dueDate="12 September"
-            priority="Low"
-            labels={["easy", "style"]}
-          />
-          <TaskCard
-            title="UI/UX"
-            description="Replicate UI of Dashboard"
-            dueDate="12 September"
-            priority="Medium"
-            labels={["easy", "style"]}
-          />
-          <TaskCard
-            title="UI/UX"
-            description="Replicate UI of Dashboard"
-            dueDate="12 September"
-            priority="High"
-            labels={["easy", "style"]}
-          />
+          {state?.taskListData?.inProgressList.map((task) => {
+            return <TaskCard taskData={task} />;
+          })}
         </TaskColumn>
         <TaskColumn columnType="Done" columnColor="#16a34a">
-          <TaskCard
-            title="UI/UX"
-            description="Replicate UI of Dashboard"
-            dueDate="12 September"
-            priority="Low"
-            labels={["easy", "style"]}
-          />
-          <TaskCard
-            title="UI/UX"
-            description="Replicate UI of Dashboard"
-            dueDate="12 September"
-            priority="Medium"
-            labels={["easy", "style"]}
-          />
-          <TaskCard
-            title="UI/UX"
-            description="Replicate UI of Dashboard"
-            dueDate="12 September"
-            priority="High"
-            labels={["easy", "style"]}
-          />
+          {state?.taskListData?.doneList.map((task) => {
+            return <TaskCard taskData={task} />;
+          })}
         </TaskColumn>
       </div>
     </PageContainer>

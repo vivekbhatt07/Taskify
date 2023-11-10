@@ -11,12 +11,19 @@ import {
 
 import {
   getAllProjectsApiResponse,
+  getProjectListDataResponse,
   deleteProjectApiResponse,
   addProjectApiResponse,
   updateProjectApiResponse,
 } from "../../apiResponse/projectApiResponse";
 interface ProjectAction {
-  type: "SET_PROJECTS" | "ADD_PROJECT" | "DELETE_PROJECT" | "UPDATE_PROJECT";
+  type:
+    | "SET_PROJECTS"
+    | "ADD_PROJECT"
+    | "DELETE_PROJECT"
+    | "UPDATE_PROJECT"
+    | "SET_PROJECT_LISTDATA"
+    | "SET_PROJECT";
   payload?: any;
 }
 
@@ -43,6 +50,8 @@ const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
 const initialProjectState = {
   projectList: [],
+  currentProject: null,
+  taskListData: null,
 };
 
 const projectReducer = (
@@ -50,8 +59,21 @@ const projectReducer = (
   { type, payload }: ProjectAction
 ) => {
   switch (type) {
+    case "SET_PROJECT": {
+      return {
+        ...state,
+        currentProject: state.projectList.filter(
+          (project) => project._id === payload
+        ),
+      };
+    }
+
     case "SET_PROJECTS": {
       return { ...state, projectList: payload };
+    }
+
+    case "SET_PROJECT_LISTDATA": {
+      return { ...state, taskListData: payload };
     }
 
     case "ADD_PROJECT": {
@@ -86,6 +108,7 @@ const ProjectProvider: FC<{ children: ReactNode }> = ({ children }) => {
     setIsLoading(true);
     try {
       const response = await getAllProjectsApiResponse();
+      console.log(response);
       if (response.status === 200) {
         dispatch({ type: "SET_PROJECTS", payload: response.data });
       }
@@ -107,7 +130,7 @@ const ProjectProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const deleteProjectHandler = async (projectId: String) => {
+  const deleteProjectHandler = async (projectId: string) => {
     try {
       const response = await deleteProjectApiResponse(projectId);
       if (response.status === 200) {
@@ -121,7 +144,18 @@ const ProjectProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const updateProjectHandler = async (projectId: String, project: Project) => {
+  const getProjectDataHandler = async (projectId: string) => {
+    try {
+      const response = await getProjectListDataResponse(projectId);
+      if (response.status === 200) {
+        dispatch({ type: "SET_PROJECT_LISTDATA", payload: response.data });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updateProjectHandler = async (projectId: string, project: Project) => {
     try {
       const response = await updateProjectApiResponse(projectId, project);
       if (response.status === 200) {
@@ -134,6 +168,8 @@ const ProjectProvider: FC<{ children: ReactNode }> = ({ children }) => {
       console.error(error);
     }
   };
+
+  console.log(state);
 
   useEffect(() => {
     getAllProjectsHandler();
@@ -148,6 +184,7 @@ const ProjectProvider: FC<{ children: ReactNode }> = ({ children }) => {
         addProjectHandler,
         deleteProjectHandler,
         updateProjectHandler,
+        getProjectDataHandler,
       }}
     >
       {children}
