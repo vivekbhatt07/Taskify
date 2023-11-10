@@ -16,6 +16,13 @@ import {
   addProjectApiResponse,
   updateProjectApiResponse,
 } from "../../apiResponse/projectApiResponse";
+
+import {
+  addToDoTaskApiResponse,
+  addInProgressTaskApiResponse,
+  addDoneTaskApiResponse,
+} from "../../apiResponse/taskApiResponse";
+
 interface ProjectAction {
   type:
     | "SET_PROJECTS"
@@ -23,7 +30,10 @@ interface ProjectAction {
     | "DELETE_PROJECT"
     | "UPDATE_PROJECT"
     | "SET_PROJECT_LISTDATA"
-    | "SET_PROJECT";
+    | "SET_PROJECT"
+    | "ADD_TODO_TASK"
+    | "ADD_INPROGRESS_TASK"
+    | "ADD_DONE_TASK";
   payload?: any;
 }
 
@@ -97,6 +107,39 @@ const projectReducer = (
         }),
       };
     }
+
+    case `ADD_${payload.variant}_TASK`: {
+      if (payload.variant === "TODO") {
+        return {
+          ...state,
+          taskListData: {
+            ...state.taskListData,
+            toDoList: [...state.taskListData.toDoList, payload.task],
+          },
+        };
+      }
+      if (payload.variant === "INPROGRESS") {
+        return {
+          ...state,
+          taskListData: {
+            ...state.taskListData,
+            inProgressList: [
+              ...state.taskListData.inProgressList,
+              payload.task,
+            ],
+          },
+        };
+      }
+      if (payload.variant === "DONE") {
+        return {
+          ...state,
+          taskListData: {
+            ...state.taskListData,
+            doneList: [...state.taskListData.doneList, payload.task],
+          },
+        };
+      }
+    }
   }
 };
 
@@ -169,7 +212,50 @@ const ProjectProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  console.log(state);
+  const addToDoTaskHandler = async (task, projectId) => {
+    try {
+      const response = await addToDoTaskApiResponse({ task, projectId });
+      console.log(response);
+      if (response.status === 201) {
+        dispatch({
+          type: "ADD_TODO_TASK",
+          payload: { variant: "TODO", task: response.data.task },
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const addInProgressTaskHandler = async (task, projectId) => {
+    try {
+      const response = await addInProgressTaskApiResponse({ task, projectId });
+      console.log(response);
+      if (response.status === 201) {
+        dispatch({
+          type: "ADD_INPROGRESS_TASK",
+          payload: { variant: "INPROGRESS", task: response.data.task },
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const addDoneTaskHandler = async (task, projectId) => {
+    try {
+      const response = await addDoneTaskApiResponse({ task, projectId });
+      console.log(response);
+      if (response.status === 201) {
+        dispatch({
+          type: "ADD_DONE_TASK",
+          payload: { variant: "DONE", task: response.data.task },
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     getAllProjectsHandler();
@@ -185,6 +271,9 @@ const ProjectProvider: FC<{ children: ReactNode }> = ({ children }) => {
         deleteProjectHandler,
         updateProjectHandler,
         getProjectDataHandler,
+        addToDoTaskHandler,
+        addInProgressTaskHandler,
+        addDoneTaskHandler,
       }}
     >
       {children}

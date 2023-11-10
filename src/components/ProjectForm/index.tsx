@@ -43,8 +43,8 @@ const ProjectForm: FC<ProjectFormProps> = ({
       updateProjectHandler(projectData._id, projectFormData);
     } else {
       addProjectHandler(projectFormData);
+      closeAction();
     }
-    closeAction();
   };
 
   return (

@@ -10,6 +10,7 @@ import {
 
 import AutoCompleteWithChips from "../AutoCompleteWithChips";
 import { TextButton } from "../../components";
+import { useProject } from "../../context";
 
 interface TaskFormProps {
   children: ReactNode;
@@ -22,6 +23,13 @@ const TaskForm: FC<TaskFormProps> = ({
   closeAction,
   isEdit,
 }): ReactNode => {
+  const {
+    state,
+    addToDoTaskHandler,
+    addInProgressTaskHandler,
+    addDoneTaskHandler,
+  } = useProject();
+
   const [taskFormData, setTaskFormData] = useState({
     title: isEdit ? "" : "",
     description: isEdit ? "" : "",
@@ -48,7 +56,17 @@ const TaskForm: FC<TaskFormProps> = ({
 
   const handleTaskFormDataSubmit = (e) => {
     e.preventDefault();
-    console.log(taskFormData);
+    if (isEdit) {
+    } else {
+      if (taskFormData.variant === "ToDo") {
+        addToDoTaskHandler(taskFormData, state.currentProject[0]._id);
+      } else if (taskFormData.variant === "InProgress") {
+        addInProgressTaskHandler(taskFormData, state.currentProject[0]._id);
+      } else if (taskFormData.variant === "Done") {
+        addDoneTaskHandler(taskFormData, state.currentProject[0]._id);
+      }
+    }
+    closeAction();
   };
 
   return (
@@ -123,9 +141,7 @@ const TaskForm: FC<TaskFormProps> = ({
           }}
         />
         <div>
-          <TextButton onClick={closeAction}>
-            {isEdit ? "Update" : "Add"}
-          </TextButton>
+          <TextButton type="submit">{isEdit ? "Update" : "Add"}</TextButton>
         </div>
       </form>
     </div>
