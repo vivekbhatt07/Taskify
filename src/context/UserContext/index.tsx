@@ -6,9 +6,11 @@ import {
   FC,
   ReactNode,
   useReducer,
-  Dispatch,
 } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { initialUserState, userReducer } from "./userReducer";
+import { UserContextType } from "./userContextTypes";
 
 import {
   getAllUsersApiResponse,
@@ -16,58 +18,14 @@ import {
   signUpUserApiResponse,
 } from "../../apiResponse/userApiResponse";
 
-interface User {
-  // _id: string;
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-  password: string;
-}
-
-interface UserAction {
-  type: "SET_USERS" | "SET_USER";
-  payload?: any;
-}
-
-interface UserState {
-  userList: User[];
-  user: User;
-  token: string;
-}
-
-interface UserContextType {
-  state: any;
-  dispatch: Dispatch<UserAction>;
-  isLoading: boolean;
-  logInUserHandler: (email: string, password: string) => void;
-  signUpUserHandler: (user: User) => void;
-}
-
 const UserContext = createContext<UserContextType | undefined>(undefined);
-
-const initialUserState = {
-  userList: [],
-  user: JSON.parse(localStorage.getItem("userCredentials"))?.user,
-  token: JSON.parse(localStorage.getItem("userCredentials"))?.token,
-};
-
-const userReducer = (state: UserState, { type, payload }: UserAction) => {
-  switch (type) {
-    case "SET_USERS": {
-      return { ...state, userList: payload };
-    }
-
-    case "SET_USER": {
-      return { ...state, user: payload.userData, token: payload.token };
-    }
-  }
-};
 
 const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialUserState);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  // GET ALL USERS:
 
   const getAllUsersHandler = async () => {
     setIsLoading(true);
@@ -82,6 +40,8 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
       setIsLoading(false);
     }
   };
+
+  // LOGIN USER:
 
   const logInUserHandler = async (email: string, password: string) => {
     setIsLoading(true);
@@ -112,6 +72,8 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
       setIsLoading(false);
     }
   };
+
+  // SIGNUP USER:
 
   const signUpUserHandler = async (user: User) => {
     setIsLoading(true);

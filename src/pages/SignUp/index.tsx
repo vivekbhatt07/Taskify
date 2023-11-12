@@ -1,13 +1,39 @@
 import { useState } from "react";
-import { TextField } from "@mui/material";
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  TextField,
+} from "@mui/material";
 
 import { TextButton } from "../../Components";
 
 import { PageContainer } from "../../layout";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const SignUp = () => {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowConfirmPassword = () =>
+    setShowConfirmPassword((show) => !show);
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
+  const handleMouseDownConfirmPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
   const { state, signUpUserHandler } = useUser();
   const navigate = useNavigate();
 
@@ -101,25 +127,63 @@ const SignUp = () => {
               />
               <div className="flex gap-2">
                 {/* PASSWORD */}
-                <TextField
-                  className="basis-1/2"
-                  name="password"
-                  label="Password"
-                  value={signUpFormData.password}
-                  onChange={handleSignUpFormInputs}
-                  type="text"
-                  required
-                />
+                <FormControl variant="outlined">
+                  <InputLabel htmlFor="signUp_password">Password</InputLabel>
+                  <OutlinedInput
+                    className="basis-1/2"
+                    name="password"
+                    label="Password"
+                    value={signUpFormData.password}
+                    onChange={handleSignUpFormInputs}
+                    type={showPassword ? "text" : "password"}
+                    required
+                    id="signUp_password"
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
                 {/* CONFIRM PASSWORD */}
-                <TextField
-                  className="basis-1/2"
-                  name="confirmPasword"
-                  label="Confirm Password"
-                  value={signUpFormData.confirmPasword}
-                  onChange={handleSignUpFormInputs}
-                  type="text"
-                  required
-                />
+                <FormControl variant="outlined">
+                  <InputLabel htmlFor="signUpConfirm_password">
+                    Confirm Password
+                  </InputLabel>
+                  <OutlinedInput
+                    className="basis-1/2"
+                    name="confirmPasword"
+                    label="Confirm Password"
+                    value={signUpFormData.confirmPasword}
+                    onChange={handleSignUpFormInputs}
+                    type={showConfirmPassword ? "text" : "password"}
+                    required
+                    id="signUpConfirm_password"
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowConfirmPassword}
+                          onMouseDown={handleMouseDownConfirmPassword}
+                          edge="end"
+                        >
+                          {showConfirmPassword ? (
+                            <VisibilityOff />
+                          ) : (
+                            <Visibility />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
               </div>
             </div>
             <div className="flex justify-center">

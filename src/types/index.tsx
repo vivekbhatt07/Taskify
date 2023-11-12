@@ -1,4 +1,5 @@
 export interface Project {
+  _id: string;
   title: string;
   description: string;
 }
@@ -21,6 +22,8 @@ export interface Task {
   labels: string[];
 }
 
+// ADD PROJECT TYPES:
+
 export type AddProjectParamsType = {
   project: {
     _id: string;
@@ -40,3 +43,5 @@ export type UpdateProjectParamsType = {
     description: string;
   };
 };
+
+// ADD USER TYPES:

@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TextField } from "@mui/material";
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  TextField,
+} from "@mui/material";
 
 import {
   ModalProvider,
@@ -10,10 +17,18 @@ import {
 } from "../../Components";
 import { PageContainer } from "../../layout";
 import { useUser } from "../../context";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Login = () => {
   const navigate = useNavigate();
   const { state, logInUserHandler } = useUser();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
 
   const [isLoginGuestOpen, setIsLoginGuestOpen] = useState(false);
 
@@ -66,15 +81,30 @@ const Login = () => {
               required
             />
 
-            <TextField
-              name="password"
-              label="Password"
-              type="text"
-              value={logInFormData.password}
-              onChange={handleLogInFormInputs}
-              required
-            />
-
+            <FormControl variant="outlined">
+              <InputLabel htmlFor="login_password">Password</InputLabel>
+              <OutlinedInput
+                name="password"
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                value={logInFormData.password}
+                onChange={handleLogInFormInputs}
+                id="login_password"
+                required
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
             <div className="flex justify-between">
               <TextButton type="submit" className="basis-1/2">
                 {/* {state.token ? "Log in" : <DarkLoader />} */}

@@ -17,7 +17,7 @@ const ProjectCard = ({ projectData }) => {
   return (
     <div
       className="border border-[#ddd] p-4 rounded-lg cursor-pointer flex flex-col gap-4"
-      // onClick={() => navigate(`/${projectData._id}`)}
+      onClick={() => navigate(`/${projectData._id}`)}
     >
       <div className="flex flex-col gap-2">
         <h3>{projectData.title}</h3>
