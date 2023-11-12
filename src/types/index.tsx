@@ -45,3 +45,10 @@ export type UpdateProjectParamsType = {
 };
 
 // ADD USER TYPES:
+
+export type GetUserParamsType = string;
+
+export type LogInUserParamsType = {
+  email: string;
+  password: string;
+};

@@ -1,13 +1,19 @@
 import { Link, NavLink } from "react-router-dom";
 import { useMode, useUser } from "../../context";
 import { TolltipIconAction, IconButton } from "../../components";
-import { Dashboard, DonutSmall, TableChart, Person } from "@mui/icons-material";
+import {
+  Dashboard,
+  DonutSmall,
+  TableChart,
+  Person,
+  Logout,
+} from "@mui/icons-material";
 
 import "./Header.css";
 
 const Header = () => {
   const { isDarkTheme, toggleTheme } = useMode();
-  const { token } = useUser();
+  const { state, logOutUserHandler } = useUser();
 
   const headerNavList = [
     { title: "Dashboard", reach: "/", icon: <Dashboard /> },
@@ -22,7 +28,7 @@ const Header = () => {
         <h1>
           <Link to="/">Taskify</Link>
         </h1>
-        {token && (
+        {state.token && (
           <div className="flex gap-3">
             {headerNavList.map((item, index) => {
               return (
@@ -48,10 +54,19 @@ const Header = () => {
           </div>
         )}
         <div className="flex gap-3 items-center">
-          {token && (
+          {state.token && (
             <IconButton>
               <Person />
             </IconButton>
+          )}
+          {state.token && (
+            <TolltipIconAction
+              position={"bottom"}
+              title="Log Out"
+              onClick={logOutUserHandler}
+            >
+              <Logout />
+            </TolltipIconAction>
           )}
           <button
             className={`mode ${isDarkTheme ? "dark" : "light"}-mode`}

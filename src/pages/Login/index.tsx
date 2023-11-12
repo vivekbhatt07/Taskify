@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FormControl,
@@ -14,14 +14,17 @@ import {
   TextButton,
   DarkLoader,
   LightLoader,
-} from "../../Components";
+} from "../../components";
 import { PageContainer } from "../../layout";
-import { useUser } from "../../context";
+import { useMode, useUser } from "../../context";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { toastHandler } from "../../utils";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { state, logInUserHandler } = useUser();
+  const { logInUserHandler, isLoading } = useUser();
+
+  const { isDarkTheme } = useMode();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (
@@ -40,23 +43,19 @@ const Login = () => {
     password: "",
   });
 
-  const handleLogInFormInputs = (event) => {
+  const handleLogInFormInputs = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setLogInFormData((prevLogInFormData) => {
       return { ...prevLogInFormData, [name]: value };
     });
   };
 
-  // const isLoginCredentials = state.userList.find((currentUser) => {
-  //   return (
-  //     currentUser.email == logInFormData.email &&
-  //     currentUser.password == logInFormData.password
-  //   );
-  // });
-
-  const handleLogInFormSubmit = (event) => {
+  const handleLogInFormSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    logInUserHandler(logInFormData.email, logInFormData.password);
+    logInUserHandler({
+      email: logInFormData.email,
+      password: logInFormData.password,
+    });
     setLogInFormData({
       email: "",
       password: "",
@@ -107,7 +106,6 @@ const Login = () => {
             </FormControl>
             <div className="flex justify-between">
               <TextButton type="submit" className="basis-1/2">
-                {/* {state.token ? "Log in" : <DarkLoader />} */}
                 Log in
               </TextButton>
               <ModalProvider
@@ -156,6 +154,7 @@ const Login = () => {
           </TextButton>
         </div>
       </div>
+      {isLoading && (isDarkTheme ? <DarkLoader /> : <LightLoader />)}
     </PageContainer>
   );
 };

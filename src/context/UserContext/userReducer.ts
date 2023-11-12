@@ -4,6 +4,7 @@ const initialUserState = {
   userList: [],
   user: JSON.parse(localStorage.getItem("userCredentials"))?.user,
   token: JSON.parse(localStorage.getItem("userCredentials"))?.token,
+  error: null,
 };
 
 const userReducer = (
@@ -17,6 +18,9 @@ const userReducer = (
 
     case "SET_USER": {
       return { ...state, user: payload.userData, token: payload.token };
+    }
+    case "SET_USER_ERROR": {
+      return { ...state, error: payload };
     }
   }
 };

@@ -20,7 +20,7 @@ interface TolltipIconActionProps {
     | undefined;
   title: String;
   isActive?: Boolean;
-  onClick: () => void;
+  onClick?: () => void;
   className?: String;
   iconBtnSx?: any;
 }

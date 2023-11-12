@@ -8,6 +8,7 @@ import {
   useReducer,
 } from "react";
 import { useNavigate } from "react-router-dom";
+import { LogInUserParamsType, User } from "../../types";
 
 import { initialUserState, userReducer } from "./userReducer";
 import { UserContextType } from "./userContextTypes";
@@ -17,6 +18,8 @@ import {
   logInUserApiResponse,
   signUpUserApiResponse,
 } from "../../apiResponse/userApiResponse";
+
+import { toastHandler } from "../../utils";
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
@@ -43,10 +46,10 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   // LOGIN USER:
 
-  const logInUserHandler = async (email: string, password: string) => {
+  const logInUserHandler = async ({ email, password }: LogInUserParamsType) => {
     setIsLoading(true);
     try {
-      const response = await logInUserApiResponse(email, password);
+      const response = await logInUserApiResponse({ email, password });
       if (response.status === 201) {
         localStorage.setItem(
           "userCredentials",
@@ -55,6 +58,9 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
             token: response.data.token,
           })
         );
+        if (state.error) {
+          dispatch({ type: "SET_USER_ERROR", payload: null });
+        }
         dispatch({
           type: "SET_USER",
           payload: {
@@ -67,7 +73,7 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
         navigate("/");
       }
     } catch (error) {
-      console.error(error);
+      dispatch({ type: "SET_USER_ERROR", payload: error });
     } finally {
       setIsLoading(false);
     }
@@ -99,15 +105,41 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
+  // LOGOUT USER:
+
+  const logOutUserHandler = () => {
+    dispatch({
+      type: "SET_USER",
+      payload: {
+        userData: null,
+        token: "",
+      },
+    });
+    dispatch({ type: "SET_USERS", payload: [] });
+    localStorage.removeItem("userCredentials");
+    navigate("/login");
+    toastHandler("success", "Logout Success");
+  };
+
   useEffect(() => {
     getAllUsersHandler();
   }, []);
 
   useEffect(() => {
+    if (state.error) {
+      toastHandler("error", "Invalid LogIn Credentials");
+    }
     if (state.token) {
       navigate("/");
+      toastHandler(
+        "success",
+        `LogIn Success, Welcome ${state.user.firstName} ${state.user.lastName}`
+      );
     }
-  }, [state.token]);
+    if (!state.token && !state.error) {
+      navigate("/login");
+    }
+  }, [state.token, state.error]);
 
   return (
     <UserContext.Provider
@@ -117,6 +149,7 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
         isLoading,
         logInUserHandler,
         signUpUserHandler,
+        logOutUserHandler,
       }}
     >
       {children}
