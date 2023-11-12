@@ -1,3 +1,8 @@
 import addDoneTaskApiResponse from "./addDoneTaskApiResponse";
-
-export { addDoneTaskApiResponse };
+import updateDoneTaskApiResponse from "./updateDoneTaskApiResponse";
+import deleteDoneTaskApiResponse from "./deleteDoneTaskApiResponse";
+export {
+  addDoneTaskApiResponse,
+  updateDoneTaskApiResponse,
+  deleteDoneTaskApiResponse,
+};

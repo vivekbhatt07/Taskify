@@ -1,5 +1,4 @@
 export interface Project {
-  _id: string;
   title: string;
   description: string;
 }
@@ -12,3 +11,32 @@ export interface User {
   email: string;
   password: string;
 }
+
+export interface Task {
+  title: string;
+  description: string;
+  dueDate: string;
+  priority: "Low" | "Medium" | "High";
+  variant: "ToDo" | "InProgress" | "Done";
+  labels: string[];
+}
+
+export type AddProjectParamsType = {
+  project: {
+    _id: string;
+    title: string;
+    description: string;
+  };
+  userId: string;
+};
+
+export type DeleteProjectParamsType = string;
+
+export type UpdateProjectParamsType = {
+  projectId: string;
+  project: {
+    _id: string;
+    title: string;
+    description: string;
+  };
+};

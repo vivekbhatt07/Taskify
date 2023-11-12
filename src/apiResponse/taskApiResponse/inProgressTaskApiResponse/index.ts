@@ -1,3 +1,8 @@
 import addInProgressTaskApiResponse from "./addInProgressTaskApiResponse";
-
-export { addInProgressTaskApiResponse };
+import updateInProgressTaskApiResponse from "./updateInProgressTaskApiResponse";
+import deleteInProgressTaskApiResponse from "./deleteInProgressTaskApiResponse";
+export {
+  addInProgressTaskApiResponse,
+  updateInProgressTaskApiResponse,
+  deleteInProgressTaskApiResponse,
+};
