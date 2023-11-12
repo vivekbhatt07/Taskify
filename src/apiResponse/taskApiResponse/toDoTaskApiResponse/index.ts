@@ -1,3 +1,8 @@
 import addToDoTaskApiResponse from "./addToDoTaskApiResponse";
-
-export { addToDoTaskApiResponse };
+import updateToDoTaskApiResponse from "./updateToDoTaskApiResponse";
+import deleteToDoTaskApiResponse from "./deleteToDoTaskApiResponse";
+export {
+  addToDoTaskApiResponse,
+  updateToDoTaskApiResponse,
+  deleteToDoTaskApiResponse,
+};

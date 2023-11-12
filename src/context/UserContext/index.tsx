@@ -17,7 +17,7 @@ import {
 } from "../../apiResponse/userApiResponse";
 
 interface User {
-  _id: string;
+  // _id: string;
   firstName: string;
   lastName: string;
   username: string;
@@ -68,6 +68,7 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialUserState);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+
   const getAllUsersHandler = async () => {
     setIsLoading(true);
     try {

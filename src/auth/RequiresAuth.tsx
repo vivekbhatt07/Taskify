@@ -5,7 +5,6 @@ import { useUser } from "../context";
 const RequiresAuth: FC<{ children: ReactNode }> = ({ children }) => {
   const location = useLocation();
   const { state } = useUser();
-  console.log(state);
 
   return state.token ? (
     children

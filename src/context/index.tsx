@@ -1,6 +1,7 @@
 import { ModeProvider, useMode } from "./ModeContext";
 import { ProjectProvider, useProject } from "./ProjectContext";
 import { UserProvider, useUser } from "./UserContext";
+import { TaskProvider, useTask } from "./TaskContext";
 export {
   ModeProvider,
   useMode,
@@ -8,4 +9,6 @@ export {
   useProject,
   UserProvider,
   useUser,
+  TaskProvider,
+  useTask,
 };

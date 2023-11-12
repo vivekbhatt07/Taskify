@@ -55,7 +55,7 @@ const TaskCard: FC<TaskCardProps> = ({ children, taskData }) => {
         }
         closeModal={closeEditTaskModal}
       >
-        <TaskForm closeAction={closeEditTaskModal} isEdit />
+        <TaskForm closeAction={closeEditTaskModal} isEdit taskData={taskData} />
       </ModalProvider>
 
       <h3 className="text-lg">{taskData?.title}</h3>
@@ -68,7 +68,7 @@ const TaskCard: FC<TaskCardProps> = ({ children, taskData }) => {
         {taskData?.priority}
       </div>
       <div className="flex flex-wrap gap-2">
-        {taskData?.labels.map((label, index) => {
+        {taskData?.labels?.map((label, index) => {
           return <Chip key={index} label={label} />;
         })}
       </div>

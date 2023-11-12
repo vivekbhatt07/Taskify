@@ -3,7 +3,12 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 import App from "./App.tsx";
 import "./index.css";
-import { ModeProvider, UserProvider, ProjectProvider } from "./context";
+import {
+  ModeProvider,
+  UserProvider,
+  ProjectProvider,
+  TaskProvider,
+} from "./context";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -11,7 +16,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <ModeProvider>
         <UserProvider>
           <ProjectProvider>
-            <App />
+            <TaskProvider>
+              <App />
+            </TaskProvider>
           </ProjectProvider>
         </UserProvider>
       </ModeProvider>

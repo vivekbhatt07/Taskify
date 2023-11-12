@@ -2,9 +2,13 @@ import { FC, ReactNode, useState, ChangeEvent, FormEvent } from "react";
 import { TextField } from "@mui/material";
 
 import { TextButton } from "../../components";
-import { useProject } from "../../context";
+import { useProject, useUser } from "../../context";
 
-import { Project } from "../../types";
+import {
+  Project,
+  AddProjectParamsType,
+  UpdateProjectParamsType,
+} from "../../types";
 
 interface ProjectFormDataType {
   title: string;
@@ -24,6 +28,9 @@ const ProjectForm: FC<ProjectFormProps> = ({
   projectData,
 }): ReactNode => {
   const { updateProjectHandler, addProjectHandler } = useProject();
+  const {
+    state: { user },
+  } = useUser();
 
   const [projectFormData, setProjectFormData] = useState<ProjectFormDataType>({
     title: isEdit ? projectData.title : "",
@@ -40,9 +47,12 @@ const ProjectForm: FC<ProjectFormProps> = ({
   const handleProjectFormDataSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (isEdit) {
-      updateProjectHandler(projectData._id, projectFormData);
+      updateProjectHandler({
+        projectId: projectData._id,
+        project: projectFormData,
+      });
     } else {
-      addProjectHandler(projectFormData);
+      addProjectHandler({ project: projectFormData, userId: user._id });
     }
     closeAction();
   };

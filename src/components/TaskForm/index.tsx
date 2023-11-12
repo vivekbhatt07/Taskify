@@ -10,25 +10,43 @@ import {
 
 import AutoCompleteWithChips from "../AutoCompleteWithChips";
 import { TextButton } from "../../components";
+import { useProject, useTask } from "../../context";
+import { Task } from "../../types";
+import { useParams } from "react-router-dom";
 
 interface TaskFormProps {
   children: ReactNode;
   closeAction: () => void;
   isEdit: Boolean;
+  taskData: Task;
 }
 
 const TaskForm: FC<TaskFormProps> = ({
   children,
   closeAction,
   isEdit,
+  taskData,
+  id,
 }): ReactNode => {
+  const {
+    addToDoTaskHandler,
+    addInProgressTaskHandler,
+    addDoneTaskHandler,
+    updateToDoTaskHandler,
+    updateInProgressTaskHandler,
+    updateDoneTaskHandler,
+  } = useTask();
+
+  const { state } = useProject();
+
+  console.log(state);
   const [taskFormData, setTaskFormData] = useState({
-    title: isEdit ? "" : "",
-    description: isEdit ? "" : "",
-    dueDate: isEdit ? "" : "",
-    priority: isEdit ? "Low" : "Low",
-    variant: isEdit ? "ToDo" : "ToDo",
-    labels: isEdit ? [] : [],
+    title: isEdit ? taskData.title : "",
+    description: isEdit ? taskData.description : "",
+    dueDate: isEdit ? taskData.dueDate : "",
+    priority: isEdit ? taskData.priority : "Low",
+    variant: isEdit ? taskData.variant : "ToDo",
+    labels: isEdit ? taskData.labels : [],
   });
 
   const handleTaskFormDataInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +66,24 @@ const TaskForm: FC<TaskFormProps> = ({
 
   const handleTaskFormDataSubmit = (e) => {
     e.preventDefault();
-    console.log(taskFormData);
+    if (isEdit) {
+      if (taskFormData.variant === "ToDo") {
+        updateToDoTaskHandler(taskFormData._id, taskFormData);
+      } else if (taskFormData.variant === "InProgress") {
+        updateInProgressTaskHandler(taskFormData._id, taskFormData);
+      } else if (taskFormData.variant === "Done") {
+        updateDoneTaskHandler(taskFormData._id, taskFormData);
+      }
+    } else {
+      if (taskFormData.variant === "ToDo") {
+        addToDoTaskHandler(taskFormData, state.currentProject[0]._id);
+      } else if (taskFormData.variant === "InProgress") {
+        addInProgressTaskHandler(taskFormData, state.currentProject[0]._id);
+      } else if (taskFormData.variant === "Done") {
+        addDoneTaskHandler(taskFormData, state.currentProject[0]._id);
+      }
+    }
+    closeAction();
   };
 
   return (
@@ -123,9 +158,7 @@ const TaskForm: FC<TaskFormProps> = ({
           }}
         />
         <div>
-          <TextButton onClick={closeAction}>
-            {isEdit ? "Update" : "Add"}
-          </TextButton>
+          <TextButton type="submit">{isEdit ? "Update" : "Add"}</TextButton>
         </div>
       </form>
     </div>

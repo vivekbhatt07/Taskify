@@ -9,13 +9,13 @@ import { PageContainer } from "../../../../layout";
 import { TaskCard, TaskColumn } from "../../components";
 import { Add } from "@mui/icons-material";
 import TaskForm from "../../../../components/TaskForm";
-import { useProject } from "../../../../context";
+import { useProject, useTask } from "../../../../context";
 
 interface DashboardDetailProps {}
 
 const DashboardDetail: FC<DashboardDetailProps> = () => {
-  const { state, dispatch, getProjectDataHandler } = useProject();
-
+  const { state, getProjectDataHandler } = useTask();
+  const { dispatch } = useProject();
   const { projectId } = useParams();
 
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState<Boolean>(false);
@@ -30,9 +30,11 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
   };
 
   useEffect(() => {
-    getProjectDataHandler(projectId);
-    dispatch({ type: "SET_PROJECT", payload: projectId });
-  }, []);
+    if (projectId) {
+      dispatch({ type: "SET_PROJECT", payload: projectId });
+      getProjectDataHandler(projectId);
+    }
+  }, [projectId]);
 
   return (
     <PageContainer>
@@ -52,21 +54,21 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
             }
             closeModal={closeAddTaskModal}
           >
-            <TaskForm closeAction={openAddTaskModal} />
+            <TaskForm closeAction={openAddTaskModal} id={projectId} />
           </ModalProvider>
         </div>
         <TaskColumn columnType="To Do" columnColor="#0891b2">
-          {state?.taskListData?.toDoList.map((task) => {
+          {state?.toDoList.map((task) => {
             return <TaskCard taskData={task} />;
           })}
         </TaskColumn>
         <TaskColumn columnType="In Progress" columnColor="#f59e0b">
-          {state?.taskListData?.inProgressList.map((task) => {
+          {state?.inProgressList.map((task) => {
             return <TaskCard taskData={task} />;
           })}
         </TaskColumn>
         <TaskColumn columnType="Done" columnColor="#16a34a">
-          {state?.taskListData?.doneList.map((task) => {
+          {state?.doneList.map((task) => {
             return <TaskCard taskData={task} />;
           })}
         </TaskColumn>
