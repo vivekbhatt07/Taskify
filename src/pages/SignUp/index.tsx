@@ -1,14 +1,42 @@
-import { useState } from "react";
-import { TextField } from "@mui/material";
+import { useState, ChangeEvent, FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  FormControl,
+  FormHelperText,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  TextField,
+} from "@mui/material";
 
-import { TextButton } from "../../Components";
+import { TextButton, LightLoader, DarkLoader } from "../../components";
 
 import { PageContainer } from "../../layout";
-import { useNavigate } from "react-router-dom";
-import { useUser } from "../../context";
+import { useMode, useUser } from "../../context";
 
 const SignUp = () => {
-  const { state, signUpUserHandler } = useUser();
+  const { isDarkTheme } = useMode();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowConfirmPassword = () =>
+    setShowConfirmPassword((show) => !show);
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
+  const handleMouseDownConfirmPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
+  const { signUpUserHandler, isLoading } = useUser();
   const navigate = useNavigate();
 
   const [signUpFormData, setSignUpFormData] = useState({
@@ -20,14 +48,17 @@ const SignUp = () => {
     confirmPasword: "",
   });
 
-  const handleSignUpFormInputs = (event) => {
+  const handleSignUpFormInputs = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setSignUpFormData((prevSignUpFormData) => {
       return { ...prevSignUpFormData, [name]: value };
     });
   };
 
-  const handleSignUpSubmit = (e) => {
+  const isPasswordMatch =
+    signUpFormData.password === signUpFormData.confirmPasword;
+
+  const handleSignUpSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { confirmPasword, ...rest } = signUpFormData;
     const signUpData = rest;
@@ -52,7 +83,7 @@ const SignUp = () => {
         <h1 className="cursor-pointer text-center text-2xl">Taskify Signup</h1>
         <form
           className="signup_form mx-auto mb-4 md:w-[500px] z-10"
-          onSubmit={handleSignUpSubmit}
+          onSubmit={(e) => handleSignUpSubmit(e)}
         >
           <div className="flex flex-col gap-8 dark:bg-stone-900 bg-stone-50">
             <div className="flex flex-col gap-6">
@@ -101,29 +132,78 @@ const SignUp = () => {
               />
               <div className="flex gap-2">
                 {/* PASSWORD */}
-                <TextField
-                  className="basis-1/2"
-                  name="password"
-                  label="Password"
-                  value={signUpFormData.password}
-                  onChange={handleSignUpFormInputs}
-                  type="text"
-                  required
-                />
+                <FormControl variant="outlined">
+                  <InputLabel htmlFor="signUp_password">Password</InputLabel>
+                  <OutlinedInput
+                    className="basis-1/2"
+                    name="password"
+                    label="Password"
+                    value={signUpFormData.password}
+                    onChange={handleSignUpFormInputs}
+                    type={showPassword ? "text" : "password"}
+                    required
+                    id="signUp_password"
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
                 {/* CONFIRM PASSWORD */}
-                <TextField
-                  className="basis-1/2"
-                  name="confirmPasword"
-                  label="Confirm Password"
-                  value={signUpFormData.confirmPasword}
-                  onChange={handleSignUpFormInputs}
-                  type="text"
-                  required
-                />
+                <FormControl variant="outlined">
+                  <InputLabel htmlFor="signUpConfirm_password">
+                    Confirm Password
+                  </InputLabel>
+                  <OutlinedInput
+                    className="basis-1/2"
+                    name="confirmPasword"
+                    label="Confirm Password"
+                    value={signUpFormData.confirmPasword}
+                    onChange={handleSignUpFormInputs}
+                    type={showConfirmPassword ? "text" : "password"}
+                    required
+                    id="signUpConfirm_password"
+                    error={!isPasswordMatch}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowConfirmPassword}
+                          onMouseDown={handleMouseDownConfirmPassword}
+                          edge="end"
+                        >
+                          {showConfirmPassword ? (
+                            <VisibilityOff />
+                          ) : (
+                            <Visibility />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                  {!isPasswordMatch && (
+                    <FormHelperText error>
+                      Password does not match
+                    </FormHelperText>
+                  )}
+                </FormControl>
               </div>
             </div>
             <div className="flex justify-center">
-              <TextButton type="submit">Sign up</TextButton>
+              <TextButton
+                type="submit"
+                disabled={!isPasswordMatch || !signUpFormData.password}
+              >
+                Sign up
+              </TextButton>
             </div>
           </div>
         </form>
@@ -133,6 +213,7 @@ const SignUp = () => {
           <TextButton onClick={() => navigate("/login")}>Log In</TextButton>
         </div>
       </div>
+      {isLoading && (isDarkTheme ? <DarkLoader /> : <LightLoader />)}
     </PageContainer>
   );
 };

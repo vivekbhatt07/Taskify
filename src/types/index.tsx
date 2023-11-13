@@ -1,10 +1,11 @@
 export interface Project {
+  _id: string;
   title: string;
   description: string;
 }
 
 export interface User {
-  _id: string;
+  _id?: string;
   firstName: string;
   lastName: string;
   username: string;
@@ -20,6 +21,8 @@ export interface Task {
   variant: "ToDo" | "InProgress" | "Done";
   labels: string[];
 }
+
+// ADD PROJECT TYPES:
 
 export type AddProjectParamsType = {
   project: {
@@ -39,4 +42,13 @@ export type UpdateProjectParamsType = {
     title: string;
     description: string;
   };
+};
+
+// ADD USER TYPES:
+
+export type GetUserParamsType = string;
+
+export type LogInUserParamsType = {
+  email: string;
+  password: string;
 };

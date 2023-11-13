@@ -6,9 +6,12 @@ import {
   FC,
   ReactNode,
   useReducer,
-  Dispatch,
 } from "react";
 import { useNavigate } from "react-router-dom";
+import { LogInUserParamsType, User } from "../../types";
+
+import { initialUserState, userReducer } from "./userReducer";
+import { UserContextType } from "./userContextTypes";
 
 import {
   getAllUsersApiResponse,
@@ -16,58 +19,16 @@ import {
   signUpUserApiResponse,
 } from "../../apiResponse/userApiResponse";
 
-interface User {
-  // _id: string;
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-  password: string;
-}
-
-interface UserAction {
-  type: "SET_USERS" | "SET_USER";
-  payload?: any;
-}
-
-interface UserState {
-  userList: User[];
-  user: User;
-  token: string;
-}
-
-interface UserContextType {
-  state: any;
-  dispatch: Dispatch<UserAction>;
-  isLoading: boolean;
-  logInUserHandler: (email: string, password: string) => void;
-  signUpUserHandler: (user: User) => void;
-}
+import { toastHandler } from "../../utils";
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
-
-const initialUserState = {
-  userList: [],
-  user: JSON.parse(localStorage.getItem("userCredentials"))?.user,
-  token: JSON.parse(localStorage.getItem("userCredentials"))?.token,
-};
-
-const userReducer = (state: UserState, { type, payload }: UserAction) => {
-  switch (type) {
-    case "SET_USERS": {
-      return { ...state, userList: payload };
-    }
-
-    case "SET_USER": {
-      return { ...state, user: payload.userData, token: payload.token };
-    }
-  }
-};
 
 const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialUserState);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  // GET ALL USERS:
 
   const getAllUsersHandler = async () => {
     setIsLoading(true);
@@ -83,10 +44,12 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const logInUserHandler = async (email: string, password: string) => {
+  // LOGIN USER:
+
+  const logInUserHandler = async ({ email, password }: LogInUserParamsType) => {
     setIsLoading(true);
     try {
-      const response = await logInUserApiResponse(email, password);
+      const response = await logInUserApiResponse({ email, password });
       if (response.status === 201) {
         localStorage.setItem(
           "userCredentials",
@@ -95,6 +58,9 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
             token: response.data.token,
           })
         );
+        if (state.error) {
+          dispatch({ type: "SET_USER_ERROR", payload: null });
+        }
         dispatch({
           type: "SET_USER",
           payload: {
@@ -107,11 +73,13 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
         navigate("/");
       }
     } catch (error) {
-      console.error(error);
+      dispatch({ type: "SET_USER_ERROR", payload: error });
     } finally {
       setIsLoading(false);
     }
   };
+
+  // SIGNUP USER:
 
   const signUpUserHandler = async (user: User) => {
     setIsLoading(true);
@@ -137,15 +105,41 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
+  // LOGOUT USER:
+
+  const logOutUserHandler = () => {
+    dispatch({
+      type: "SET_USER",
+      payload: {
+        userData: null,
+        token: "",
+      },
+    });
+    dispatch({ type: "SET_USERS", payload: [] });
+    localStorage.removeItem("userCredentials");
+    navigate("/login");
+    toastHandler("success", "Logout Success");
+  };
+
   useEffect(() => {
     getAllUsersHandler();
   }, []);
 
   useEffect(() => {
+    if (state.error) {
+      toastHandler("error", "Invalid LogIn Credentials");
+    }
     if (state.token) {
       navigate("/");
+      toastHandler(
+        "success",
+        `LogIn Success, Welcome ${state.user.firstName} ${state.user.lastName}`
+      );
     }
-  }, [state.token]);
+    if (!state.token && !state.error) {
+      navigate("/login");
+    }
+  }, [state.token, state.error]);
 
   return (
     <UserContext.Provider
@@ -155,6 +149,7 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
         isLoading,
         logInUserHandler,
         signUpUserHandler,
+        logOutUserHandler,
       }}
     >
       {children}

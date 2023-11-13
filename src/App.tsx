@@ -1,7 +1,8 @@
 import { Routes, Route } from "react-router-dom";
-import "./App.css";
+import toast, { Toaster } from "react-hot-toast";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import "./App.css";
 import { Dashboard, Metrics, Table, Login, SignUp } from "./pages";
 import { DashboardDetail } from "./pages/Dashboard/screens";
 import { useMode } from "./context";
@@ -23,6 +24,7 @@ function App() {
   const { isDarkTheme } = useMode();
   return (
     <div>
+      <Toaster />
       <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
         <CssBaseline />
         <Routes>
