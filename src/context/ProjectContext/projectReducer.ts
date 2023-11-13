@@ -45,6 +45,10 @@ const projectReducer = (
         }),
       };
     }
+
+    case "RESET_PROJECT": {
+      return { projectList: [], currentProject: null };
+    }
   }
 };
 

@@ -16,10 +16,9 @@ interface ProjectFormDataType {
 }
 
 interface ProjectFormProps {
-  children: ReactNode;
   closeAction: () => void;
-  isEdit: Boolean;
-  projectData: Project;
+  isEdit?: boolean;
+  projectData?: Project;
 }
 
 const ProjectForm: FC<ProjectFormProps> = ({
@@ -33,8 +32,8 @@ const ProjectForm: FC<ProjectFormProps> = ({
   } = useUser();
 
   const [projectFormData, setProjectFormData] = useState<ProjectFormDataType>({
-    title: isEdit ? projectData.title : "",
-    description: isEdit ? projectData.description : "",
+    title: isEdit ? projectData?.title : "",
+    description: isEdit ? projectData?.description : "",
   });
 
   const handleProjectFormDataInput = (e: ChangeEvent<HTMLInputElement>) => {

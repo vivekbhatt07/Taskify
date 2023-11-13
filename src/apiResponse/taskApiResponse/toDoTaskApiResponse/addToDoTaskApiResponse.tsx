@@ -1,8 +1,11 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { API } from "../../api.tsx";
-import { Project } from "../../../types/index.tsx";
+import { AddTaskParamsType } from "../../../types";
 
-const addToDoTaskApiResponse = async ({ task, projectId }) =>
+const addToDoTaskApiResponse = async ({
+  task,
+  projectId,
+}: AddTaskParamsType): Promise<AxiosResponse> =>
   await axios.post(`${API}/tasks/toDo`, { task, projectId });
 
 export default addToDoTaskApiResponse;

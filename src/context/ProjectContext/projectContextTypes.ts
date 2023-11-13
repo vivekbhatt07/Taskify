@@ -12,7 +12,8 @@ export interface ProjectActionType {
     | "ADD_PROJECT"
     | "DELETE_PROJECT"
     | "UPDATE_PROJECT"
-    | "SET_PROJECT";
+    | "SET_PROJECT"
+    | "RESET_PROJECT";
   payload?: any;
 }
 

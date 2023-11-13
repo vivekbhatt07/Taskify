@@ -4,21 +4,30 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { ModalProvider } from "../../../../components";
 import TaskForm from "../../../../components/TaskForm";
 import { Chip } from "@mui/material";
+import { useTask } from "../../../../context";
+import { Delete } from "@mui/icons-material";
 
 interface TaskCardProps {
   children?: ReactNode;
   taskData: {
-    title: String;
-    description: String;
-    dueDate: String;
+    _id?: string;
+    title: string;
+    description: string;
+    dueDate: string;
     priority: "Low" | "Medium" | "High";
-    labels: String[];
+    labels: string[];
+    variant: "ToDo" | "InProgress" | "Done";
   };
 }
 
 const TaskCard: FC<TaskCardProps> = ({ children, taskData }) => {
+  const {
+    deleteToDoTaskHandler,
+    deleteInProgressTaskHandler,
+    deleteDoneTaskHandler,
+  } = useTask();
   const [isEditTaskModalOpen, setIsEditTaskModalOpen] =
-    useState<Boolean>(false);
+    useState<boolean>(false);
 
   const openEditTaskModal = () => setIsEditTaskModalOpen(true);
   const closeEditTaskModal = () => setIsEditTaskModalOpen(false);
@@ -38,26 +47,46 @@ const TaskCard: FC<TaskCardProps> = ({ children, taskData }) => {
 
   return (
     <div className="bg-700 p-4 rounded-lg flex flex-col gap-1 items-start relative">
-      <ModalProvider
-        isOpen={isEditTaskModalOpen}
-        title="Edit Task"
-        OpenAction={
-          <TolltipIconAction
-            title="Edit Task"
-            position="right"
-            // className="absolute right-0 top-0"
-            onClick={() => {
-              openEditTaskModal();
-            }}
-          >
-            <MoreVertIcon />
-          </TolltipIconAction>
-        }
-        closeModal={closeEditTaskModal}
-      >
-        <TaskForm closeAction={closeEditTaskModal} isEdit taskData={taskData} />
-      </ModalProvider>
-
+      <div className="flex justify-between">
+        <ModalProvider
+          isOpen={isEditTaskModalOpen}
+          title="Edit Task"
+          OpenAction={
+            <TolltipIconAction
+              title="Edit Task"
+              position="right"
+              // className="absolute right-0 top-0"
+              onClick={() => {
+                openEditTaskModal();
+              }}
+            >
+              <MoreVertIcon />
+            </TolltipIconAction>
+          }
+          closeModal={closeEditTaskModal}
+        >
+          <TaskForm
+            closeAction={closeEditTaskModal}
+            isEdit
+            taskData={taskData}
+          />
+        </ModalProvider>
+        <TolltipIconAction
+          title="Delete Task"
+          position="right"
+          onClick={() => {
+            if (taskData.variant === "ToDo") {
+              deleteToDoTaskHandler(taskData._id);
+            } else if (taskData.variant === "InProgress") {
+              deleteInProgressTaskHandler(taskData._id);
+            } else if (taskData.variant === "Done") {
+              deleteDoneTaskHandler(taskData._id);
+            }
+          }}
+        >
+          <Delete />
+        </TolltipIconAction>
+      </div>
       <h3 className="text-lg">{taskData?.title}</h3>
       <p className="text-sm">{taskData?.description}</p>
       <div>{taskData?.dueDate}</div>

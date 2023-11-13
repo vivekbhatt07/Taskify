@@ -1,6 +1,5 @@
 import { FC, useState } from "react";
 import {
-  IconButton,
   TolltipIconAction,
   ModalProvider,
   LightLoader,
@@ -19,7 +18,7 @@ const Dashboard: FC<DashboardProps> = () => {
   const { state, isLoading } = useProject();
   const { isDarkTheme } = useMode();
   const [isAddProjectModalOpen, setIsAddProjectModalOpen] =
-    useState<Boolean>(false);
+    useState<boolean>(false);
 
   const openAddProjectModal = () => setIsAddProjectModalOpen(true);
   const closeAddProjectModal = () => setIsAddProjectModalOpen(false);

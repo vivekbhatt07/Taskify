@@ -1,32 +1,30 @@
-import { FC, ReactNode, useState, ChangeEvent } from "react";
+import { FC, ReactNode, useState, ChangeEvent, FormEvent } from "react";
 import {
   TextField,
   InputLabel,
   MenuItem,
   FormControl,
   Select,
-  SelectChangeEvent,
 } from "@mui/material";
 
 import AutoCompleteWithChips from "../AutoCompleteWithChips";
 import { TextButton } from "../../components";
 import { useProject, useTask } from "../../context";
 import { Task } from "../../types";
-import { useParams } from "react-router-dom";
 
 interface TaskFormProps {
   children: ReactNode;
   closeAction: () => void;
   isEdit: Boolean;
   taskData: Task;
+  projectId: string | undefined;
 }
 
 const TaskForm: FC<TaskFormProps> = ({
-  children,
   closeAction,
   isEdit,
   taskData,
-  id,
+  projectId,
 }): ReactNode => {
   const {
     addToDoTaskHandler,
@@ -37,9 +35,6 @@ const TaskForm: FC<TaskFormProps> = ({
     updateDoneTaskHandler,
   } = useTask();
 
-  const { state } = useProject();
-
-  console.log(state);
   const [taskFormData, setTaskFormData] = useState({
     title: isEdit ? taskData.title : "",
     description: isEdit ? taskData.description : "",
@@ -64,23 +59,41 @@ const TaskForm: FC<TaskFormProps> = ({
     }));
   }
 
-  const handleTaskFormDataSubmit = (e) => {
+  const handleTaskFormDataSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isEdit) {
       if (taskFormData.variant === "ToDo") {
-        updateToDoTaskHandler(taskFormData._id, taskFormData);
+        updateToDoTaskHandler({
+          taskId: taskData._id,
+          updatedFields: taskFormData,
+        });
       } else if (taskFormData.variant === "InProgress") {
-        updateInProgressTaskHandler(taskFormData._id, taskFormData);
+        updateInProgressTaskHandler({
+          taskId: taskData._id,
+          updatedFields: taskFormData,
+        });
       } else if (taskFormData.variant === "Done") {
-        updateDoneTaskHandler(taskFormData._id, taskFormData);
+        updateDoneTaskHandler({
+          taskId: taskData._id,
+          updatedFields: taskFormData,
+        });
       }
     } else {
       if (taskFormData.variant === "ToDo") {
-        addToDoTaskHandler(taskFormData, state.currentProject[0]._id);
+        addToDoTaskHandler({
+          task: taskFormData,
+          projectId: projectId,
+        });
       } else if (taskFormData.variant === "InProgress") {
-        addInProgressTaskHandler(taskFormData, state.currentProject[0]._id);
+        addInProgressTaskHandler({
+          task: taskFormData,
+          projectId: projectId,
+        });
       } else if (taskFormData.variant === "Done") {
-        addDoneTaskHandler(taskFormData, state.currentProject[0]._id);
+        addDoneTaskHandler({
+          task: taskFormData,
+          projectId: projectId,
+        });
       }
     }
     closeAction();
