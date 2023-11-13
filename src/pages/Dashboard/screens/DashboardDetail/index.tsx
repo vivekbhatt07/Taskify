@@ -54,22 +54,22 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
             }
             closeModal={closeAddTaskModal}
           >
-            <TaskForm closeAction={openAddTaskModal} id={projectId} />
+            <TaskForm closeAction={closeAddTaskModal} projectId={projectId} />
           </ModalProvider>
         </div>
         <TaskColumn columnType="To Do" columnColor="#0891b2">
-          {state?.toDoList.map((task) => {
-            return <TaskCard taskData={task} />;
+          {state?.toDoList.map((task, index) => {
+            return <TaskCard taskData={task} key={index} />;
           })}
         </TaskColumn>
         <TaskColumn columnType="In Progress" columnColor="#f59e0b">
-          {state?.inProgressList.map((task) => {
-            return <TaskCard taskData={task} />;
+          {state?.inProgressList.map((task, index) => {
+            return <TaskCard taskData={task} key={index} />;
           })}
         </TaskColumn>
         <TaskColumn columnType="Done" columnColor="#16a34a">
-          {state?.doneList.map((task) => {
-            return <TaskCard taskData={task} />;
+          {state?.doneList.map((task, index) => {
+            return <TaskCard taskData={task} key={index} />;
           })}
         </TaskColumn>
       </div>

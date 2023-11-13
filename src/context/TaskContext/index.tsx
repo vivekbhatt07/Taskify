@@ -2,14 +2,10 @@ import {
   useState,
   useContext,
   createContext,
-  useEffect,
   FC,
   ReactNode,
   useReducer,
-  Dispatch,
 } from "react";
-
-import { useParams } from "react-router-dom";
 
 import {
   addToDoTaskApiResponse,
@@ -25,142 +21,23 @@ import {
 
 import { getProjectListDataResponse } from "../../apiResponse/projectApiResponse";
 
-import { Task } from "../../types";
-import { useProject } from "..";
+import {
+  AddTaskParamsType,
+  DeleteTaskParamsType,
+  UpdateTaskParamsType,
+} from "../../types";
 
-interface TaskAction {
-  type:
-    | "SET_LIST_DATA"
-    | "ADD_TODO_TASK"
-    | "ADD_INPROGRESS_TASK"
-    | "ADD_DONE_TASK"
-    | "DELETE_TODO_TASK"
-    | "DELETE_INPROGRESS_TASK"
-    | "DELETE_DONE_TASK"
-    | "UPDATE_TODO_TASK"
-    | "UPDATE_INPROGRESS_TASK"
-    | "UPDATE_DONE_TASK";
-  payload?: any;
-}
-
-interface TaskState {
-  toDoList: Task[];
-  inProgressList: Task[];
-  doneList: Task[];
-}
-
-interface TaskContextType {
-  state: TaskState;
-  isLoading: boolean;
-  dispatch: Dispatch<TaskAction>;
-  addToDoTaskHandler: (task: Task, projectId: string) => void;
-  addInProgressTaskHandler: (task: Task, projectId: string) => void;
-  addDoneTaskHandler: (task: Task, projectId: string) => void;
-  deleteToDoTaskHandler: (taskId: string) => void;
-  deleteInProgressTaskHandler: (taskId: string) => void;
-  deleteDoneTaskHandler: (taskId: string) => void;
-  updateToDoTaskHandler: (taskId: string, updatedFields: Task) => void;
-  updateInProgressTaskHandler: (taskId: string, updatedFields: Task) => void;
-  updateDoneTaskHandler: (taskId: string, updatedFields: Task) => void;
-  getProjectDataHandler: (projectId: string) => void;
-}
+import { TaskContextType } from "./taskContextTypes";
+import { initialTaskState, taskReducer } from "./taskReducer";
 
 const TextContext = createContext<TaskContextType | undefined>(undefined);
 
-const initialTaskState = {
-  toDoList: [],
-  inProgressList: [],
-  doneList: [],
-};
-
-const taskReducer = (state: TaskState, { type, payload }: TaskAction) => {
-  switch (type) {
-    case "SET_LIST_DATA": {
-      return {
-        ...state,
-        toDoList: payload.toDoList,
-        inProgressList: payload.inProgressList,
-        doneList: payload.doneList,
-      };
-    }
-
-    case "ADD_TODO_TASK": {
-      return {
-        ...state,
-        toDoList: [...state.toDoList, payload],
-      };
-    }
-
-    case "ADD_INPROGRESS_TASK": {
-      return {
-        ...state,
-        inProgressList: [...state.inProgressList, payload],
-      };
-    }
-
-    case "ADD_DONE_TASK": {
-      return {
-        ...state,
-        doneList: [...state.doneList, payload],
-      };
-    }
-
-    case "DELETE_TODO_TASK": {
-      return {
-        ...state,
-        toDoList: state.toDoList.filter((toDo) => toDo._id !== payload),
-      };
-    }
-
-    case "DELETE_INPROGRESS_TASK": {
-      return {
-        ...state,
-        inProgressList: state.inProgressList.filter(
-          (inProgress) => inProgress._id !== payload
-        ),
-      };
-    }
-
-    case "DELETE_DONE_TASK": {
-      return {
-        ...state,
-        doneList: state.doneList.filter((done) => done._id !== payload),
-      };
-    }
-
-    case "UPDATE_TODO_TASK": {
-      return {
-        ...state,
-        toDoList: state.toDoList.map((toDo) =>
-          toDo._id === payload._id ? payload : toDo
-        ),
-      };
-    }
-
-    case "UPDATE_INPROGRESS_TASK": {
-      return {
-        ...state,
-        inProgressList: state.inProgressList.map((inProgress) =>
-          inProgress._id === payload._id ? payload : inProgress
-        ),
-      };
-    }
-
-    case "UPDATE_DONE_TASK": {
-      return {
-        ...state,
-        doneList: state.doneList.map((done) =>
-          done._id === payload._id ? payload : done
-        ),
-      };
-    }
-  }
-};
-
 const TaskProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(taskReducer, initialTaskState);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getProjectDataHandler = async (projectId: string) => {
+    setIsLoading(true);
     try {
       const response = await getProjectListDataResponse(projectId);
       if (response.status === 200) {
@@ -172,19 +49,18 @@ const TaskProvider: FC<{ children: ReactNode }> = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const addToDoTaskHandler = async (task: Task, projectId: string) => {
+  const addToDoTaskHandler = async ({ task, projectId }: AddTaskParamsType) => {
     try {
       const response = await addToDoTaskApiResponse({ task, projectId });
-      console.log(response);
       if (response.status === 201) {
         dispatch({
           type: "ADD_TODO_TASK",
-          payload: { variant: "TODO", task: response.data.task },
+          payload: response.data.task,
         });
       }
     } catch (error) {
@@ -192,14 +68,16 @@ const TaskProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const addInProgressTaskHandler = async (task: Task, projectId: string) => {
+  const addInProgressTaskHandler = async ({
+    task,
+    projectId,
+  }: AddTaskParamsType) => {
     try {
       const response = await addInProgressTaskApiResponse({ task, projectId });
-      console.log(response);
       if (response.status === 201) {
         dispatch({
           type: "ADD_INPROGRESS_TASK",
-          payload: { variant: "INPROGRESS", task: response.data.task },
+          payload: response.data.task,
         });
       }
     } catch (error) {
@@ -207,14 +85,13 @@ const TaskProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const addDoneTaskHandler = async (task: Task, projectId: string) => {
+  const addDoneTaskHandler = async ({ task, projectId }: AddTaskParamsType) => {
     try {
       const response = await addDoneTaskApiResponse({ task, projectId });
-      console.log(response);
       if (response.status === 201) {
         dispatch({
           type: "ADD_DONE_TASK",
-          payload: { variant: "DONE", task: response.data.task },
+          payload: response.data.task,
         });
       }
     } catch (error) {
@@ -222,64 +99,102 @@ const TaskProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const deleteToDoTaskHandler = async (taskId: string) => {
+  const deleteToDoTaskHandler = async (taskId: DeleteTaskParamsType) => {
     try {
       const response = await deleteToDoTaskApiResponse(taskId);
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const deleteInProgressTaskHandler = async (taskId: string) => {
-    try {
-      const response = await deleteInProgressTaskApiResponse(taskId);
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const deleteDoneTaskHandler = async (taskId: string) => {
-    try {
-      const response = await deleteDoneTaskApiResponse(taskId);
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const updateToDoTaskHandler = async (taskId: string, updatedFields: Task) => {
-    try {
-      const response = await updateToDoTaskApiResponse(taskId, updatedFields);
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const updateInProgressTaskHandler = async (
-    taskId: string,
-    updatedFields: Task
-  ) => {
-    try {
-      const response = await updateInProgressTaskApiResponse(
-        taskId,
-        updatedFields
-      );
-      console.log(response);
-      if (response.status === 201) {
+      if (response.status === 200) {
+        dispatch({
+          type: "DELETE_TODO_TASK",
+          payload: response.data.deletedTask._id,
+        });
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const updateDoneTaskHandler = async (taskId: string, updatedFields: Task) => {
+  const deleteInProgressTaskHandler = async (taskId: DeleteTaskParamsType) => {
     try {
-      const response = await updateDoneTaskApiResponse(taskId, updatedFields);
-      console.log(response);
-      if (response.status === 201) {
+      const response = await deleteInProgressTaskApiResponse(taskId);
+      if (response.status === 200) {
+        dispatch({
+          type: "DELETE_INPROGRESS_TASK",
+          payload: response.data.deletedTask._id,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteDoneTaskHandler = async (taskId: DeleteTaskParamsType) => {
+    try {
+      const response = await deleteDoneTaskApiResponse(taskId);
+      if (response.status === 200) {
+        dispatch({
+          type: "DELETE_DONE_TASK",
+          payload: response.data.deletedTask._id,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updateToDoTaskHandler = async ({
+    taskId,
+    updatedFields,
+  }: UpdateTaskParamsType) => {
+    try {
+      const response = await updateToDoTaskApiResponse({
+        taskId,
+        updatedFields,
+      });
+      if (response.status === 200) {
+        dispatch({
+          type: "UPDATE_TODO_TASK",
+          payload: response.data.updatedTask,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updateInProgressTaskHandler = async ({
+    taskId,
+    updatedFields,
+  }: UpdateTaskParamsType) => {
+    try {
+      const response = await updateInProgressTaskApiResponse({
+        taskId,
+        updatedFields,
+      });
+      if (response.status === 200) {
+        dispatch({
+          type: "UPDATE_INPROGRESS_TASK",
+          payload: response.data.updatedTask,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updateDoneTaskHandler = async ({
+    taskId,
+    updatedFields,
+  }: UpdateTaskParamsType) => {
+    try {
+      const response = await updateDoneTaskApiResponse({
+        taskId,
+        updatedFields,
+      });
+      if (response.status === 200) {
+        dispatch({
+          type: "UPDATE_DONE_TASK",
+          payload: response.data.updatedTask,
+        });
       }
     } catch (error) {
       console.error(error);

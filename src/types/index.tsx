@@ -14,6 +14,7 @@ export interface User {
 }
 
 export interface Task {
+  _id?: string | undefined;
   title: string;
   description: string;
   dueDate: string;
@@ -51,4 +52,20 @@ export type GetUserParamsType = string;
 export type LogInUserParamsType = {
   email: string;
   password: string;
+};
+
+// TODO PARAM TYPES:
+
+export type AddTaskParamsType = {
+  task: Task;
+  projectId: string;
+};
+
+export type DeleteTaskParamsType = {
+  taskId: string;
+};
+
+export type UpdateTaskParamsType = {
+  taskId: string;
+  updatedFields: Task;
 };

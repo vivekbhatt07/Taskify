@@ -24,18 +24,22 @@ import {
 import { ProjectContextType } from "./projectContextTypes";
 
 import { initialProjectState, projectReducer } from "./projectReducer";
+import { useUser } from "..";
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
 const ProjectProvider: FC<{ children: ReactNode }> = ({ children }) => {
+  const {
+    state: { user },
+  } = useUser();
   const [state, dispatch] = useReducer(projectReducer, initialProjectState);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // GET ALL PROJECTS:
-  const getAllProjectsHandler = async () => {
+  const getAllProjectsHandler = async (userId: string) => {
     setIsLoading(true);
     try {
-      const response = await getAllProjectsApiResponse();
+      const response = await getAllProjectsApiResponse(userId);
       console.log(response);
       if (response.status === 200) {
         dispatch({ type: "SET_PROJECTS", payload: response.data });
@@ -96,8 +100,10 @@ const ProjectProvider: FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   useEffect(() => {
-    getAllProjectsHandler();
-  }, []);
+    if (user) {
+      getAllProjectsHandler(user._id);
+    }
+  }, [user]);
 
   return (
     <ProjectContext.Provider

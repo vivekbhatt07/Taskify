@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { useMode, useUser } from "../../context";
+import { useMode, useProject, useUser } from "../../context";
 import { TolltipIconAction, IconButton } from "../../components";
 import {
   Dashboard,
@@ -14,6 +14,7 @@ import "./Header.css";
 import { Popover, Typography } from "@mui/material";
 
 const Header = () => {
+  const { dispatch } = useProject();
   const { isDarkTheme, toggleTheme } = useMode();
   const { state, logOutUserHandler } = useUser();
 
@@ -105,7 +106,10 @@ const Header = () => {
                     <TolltipIconAction
                       position={"bottom"}
                       title="Log Out"
-                      onClick={logOutUserHandler}
+                      onClick={() => {
+                        logOutUserHandler();
+                        dispatch({ type: "RESET_PROJECT" });
+                      }}
                     >
                       <Logout />
                     </TolltipIconAction>
