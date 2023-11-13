@@ -18,7 +18,6 @@ import {
 import { PageContainer } from "../../layout";
 import { useMode, useUser } from "../../context";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { toastHandler } from "../../utils";
 
 const Login = () => {
   const navigate = useNavigate();

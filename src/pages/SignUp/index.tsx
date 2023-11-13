@@ -1,6 +1,9 @@
-import { useState, ChangeEventHandler } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   FormControl,
+  FormHelperText,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -8,14 +11,13 @@ import {
   TextField,
 } from "@mui/material";
 
-import { TextButton } from "../../Components";
+import { TextButton, LightLoader, DarkLoader } from "../../components";
 
 import { PageContainer } from "../../layout";
-import { useNavigate } from "react-router-dom";
-import { useUser } from "../../context";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useMode, useUser } from "../../context";
 
 const SignUp = () => {
+  const { isDarkTheme } = useMode();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
@@ -34,7 +36,7 @@ const SignUp = () => {
     event.preventDefault();
   };
 
-  const { state, signUpUserHandler } = useUser();
+  const { signUpUserHandler, isLoading } = useUser();
   const navigate = useNavigate();
 
   const [signUpFormData, setSignUpFormData] = useState({
@@ -46,14 +48,17 @@ const SignUp = () => {
     confirmPasword: "",
   });
 
-  const handleSignUpFormInputs = (event) => {
+  const handleSignUpFormInputs = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setSignUpFormData((prevSignUpFormData) => {
       return { ...prevSignUpFormData, [name]: value };
     });
   };
 
-  const handleSignUpSubmit = (e) => {
+  const isPasswordMatch =
+    signUpFormData.password === signUpFormData.confirmPasword;
+
+  const handleSignUpSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { confirmPasword, ...rest } = signUpFormData;
     const signUpData = rest;
@@ -78,7 +83,7 @@ const SignUp = () => {
         <h1 className="cursor-pointer text-center text-2xl">Taskify Signup</h1>
         <form
           className="signup_form mx-auto mb-4 md:w-[500px] z-10"
-          onSubmit={handleSignUpSubmit}
+          onSubmit={(e) => handleSignUpSubmit(e)}
         >
           <div className="flex flex-col gap-8 dark:bg-stone-900 bg-stone-50">
             <div className="flex flex-col gap-6">
@@ -166,6 +171,7 @@ const SignUp = () => {
                     type={showConfirmPassword ? "text" : "password"}
                     required
                     id="signUpConfirm_password"
+                    error={!isPasswordMatch}
                     endAdornment={
                       <InputAdornment position="end">
                         <IconButton
@@ -183,11 +189,21 @@ const SignUp = () => {
                       </InputAdornment>
                     }
                   />
+                  {!isPasswordMatch && (
+                    <FormHelperText error>
+                      Password does not match
+                    </FormHelperText>
+                  )}
                 </FormControl>
               </div>
             </div>
             <div className="flex justify-center">
-              <TextButton type="submit">Sign up</TextButton>
+              <TextButton
+                type="submit"
+                disabled={!isPasswordMatch || !signUpFormData.password}
+              >
+                Sign up
+              </TextButton>
             </div>
           </div>
         </form>
@@ -197,6 +213,7 @@ const SignUp = () => {
           <TextButton onClick={() => navigate("/login")}>Log In</TextButton>
         </div>
       </div>
+      {isLoading && (isDarkTheme ? <DarkLoader /> : <LightLoader />)}
     </PageContainer>
   );
 };
