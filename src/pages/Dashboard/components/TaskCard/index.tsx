@@ -143,9 +143,11 @@ const TaskCard: FC<TaskCardProps> = ({ taskData, index }) => {
   return (
     // @ts-ignore
     <Draggable draggableId={taskData._id} index={index}>
-      {(provided) => (
+      {(provided, snapshot) => (
         <div
-          className="dark:bg-700 p-4 rounded-lg flex flex-col gap-2 items-start relative bg-50"
+          className={`dark:bg-700 p-4 rounded-lg flex flex-col gap-2 items-start relative bg-50 ${
+            snapshot.isDragging ? "dragging" : ""
+          }`}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}

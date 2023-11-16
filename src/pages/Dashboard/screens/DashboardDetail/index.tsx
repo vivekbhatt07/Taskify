@@ -39,7 +39,7 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
   const onDragEnd = (result: DropResult) => {
     console.log(result);
     const { draggableId, destination, source } = result;
-    const { droppableId: destinationDroppableId, index: destinationIndex } =
+    let { droppableId: destinationDroppableId, index: destinationIndex } =
       destination; // "InProgress", 1
     const { droppableId: sourceDroppableId, index: sourceIndex } = source; // "Done", 0
     if (!destination) return;
@@ -50,8 +50,8 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
       return;
 
     let staticList: Task[] = [...state[sourceDroppableId]];
-    // let decrementedList = [...state[sourceDroppableId]];
-    // let incrementedList = [...state[destinationDroppableId]];
+    let decrementedList = [...state[sourceDroppableId]];
+    let incrementedList = [...state[destinationDroppableId]];
     if (
       sourceDroppableId === destinationDroppableId &&
       sourceIndex !== destinationIndex
@@ -119,6 +119,43 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
       }
     }
     if (sourceDroppableId !== destinationDroppableId) {
+      const foundTask = decrementedList.find((task) => {
+        return task._id === draggableId;
+      });
+
+      decrementedList = decrementedList.filter(
+        (task) => task._id !== draggableId
+      );
+
+      if (destinationIndex === 0) {
+        console.log("first");
+        incrementedList.unshift(foundTask);
+      }
+
+      if (destinationIndex === incrementedList.length) {
+        destinationIndex++;
+        incrementedList.push(foundTask);
+      }
+
+      if (0 < destinationIndex && destinationIndex < incrementedList.length) {
+        console.log("between");
+        let leftSlice = incrementedList.slice(0, destinationIndex);
+        let rightSlice = incrementedList.slice(
+          destinationIndex,
+          incrementedList.length + 1
+        );
+
+        incrementedList = [...leftSlice, foundTask, ...rightSlice];
+      }
+
+      taskDispatch({
+        type: "SET_LIST_DATA",
+        payload: {
+          ...state,
+          [sourceDroppableId]: decrementedList,
+          [destinationDroppableId]: incrementedList,
+        },
+      });
     }
   };
 
@@ -186,9 +223,11 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
               <div className="flex w-full gap-4">
                 <TaskColumn columnType="To Do">
                   <Droppable droppableId="toDoList">
-                    {(provided) => (
+                    {(provided, snapshot) => (
                       <div
-                        className="flex flex-col gap-4"
+                        className={`flex flex-col gap-4 ${
+                          snapshot.isDraggingOver ? "dragActive" : ""
+                        }`}
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                       >
@@ -208,9 +247,11 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
                 </TaskColumn>
                 <TaskColumn columnType="In Progress">
                   <Droppable droppableId="inProgressList">
-                    {(provided) => (
+                    {(provided, snapshot) => (
                       <div
-                        className="flex flex-col gap-4"
+                        className={`flex flex-col gap-4 ${
+                          snapshot.isDraggingOver ? "dragActive" : ""
+                        }`}
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                       >
@@ -230,9 +271,11 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
                 </TaskColumn>
                 <TaskColumn columnType="Done">
                   <Droppable droppableId="doneList">
-                    {(provided) => (
+                    {(provided, snapshot) => (
                       <div
-                        className="flex flex-col gap-4"
+                        className={`flex flex-col gap-4 ${
+                          snapshot.isDraggingOver ? "dragActive" : ""
+                        }`}
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                       >
