@@ -16,8 +16,8 @@ import { Task } from "../../types";
 interface TaskFormProps {
   children?: ReactNode;
   closeAction: () => void;
-  isEdit: boolean;
-  taskData: Task;
+  isEdit?: boolean;
+  taskData?: Task;
   projectId?: string | undefined;
 }
 
