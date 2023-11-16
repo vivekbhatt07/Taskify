@@ -40,7 +40,7 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
     console.log(result);
     const { draggableId, destination, source } = result;
     let { droppableId: destinationDroppableId, index: destinationIndex } =
-      destination; // "InProgress", 1
+      destination;
     const { droppableId: sourceDroppableId, index: sourceIndex } = source; // "Done", 0
     if (!destination) return;
     if (
@@ -89,34 +89,13 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
           staticList = [...leftSlice, ...rightSlice];
         }
       }
-      if (sourceDroppableId === "toDoList") {
-        taskDispatch({
-          type: "SET_LIST_DATA",
-          payload: {
-            toDoList: staticList,
-            inProgressList: state.inProgressList,
-            doneList: state.doneList,
-          },
-        });
-      } else if (sourceDroppableId === "inProgressList") {
-        taskDispatch({
-          type: "SET_LIST_DATA",
-          payload: {
-            toDoList: state.toDoList,
-            inProgressList: staticList,
-            doneList: state.doneList,
-          },
-        });
-      } else if (sourceDroppableId === "doneList") {
-        taskDispatch({
-          type: "SET_LIST_DATA",
-          payload: {
-            toDoList: state.toDoList,
-            inProgressList: state.inProgressList,
-            doneList: staticList,
-          },
-        });
-      }
+      taskDispatch({
+        type: "SET_LIST_DATA",
+        payload: {
+          ...state,
+          [sourceDroppableId]: staticList,
+        },
+      });
     }
     if (sourceDroppableId !== destinationDroppableId) {
       const foundTask = decrementedList.find((task) => {
@@ -128,7 +107,6 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
       );
 
       if (destinationIndex === 0) {
-        console.log("first");
         incrementedList.unshift(foundTask);
       }
 
@@ -138,7 +116,6 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
       }
 
       if (0 < destinationIndex && destinationIndex < incrementedList.length) {
-        console.log("between");
         let leftSlice = incrementedList.slice(0, destinationIndex);
         let rightSlice = incrementedList.slice(
           destinationIndex,
