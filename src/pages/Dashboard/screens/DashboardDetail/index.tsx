@@ -38,7 +38,27 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
 
   const onDragEnd = (result: DropResult) => {
     console.log(result);
-    const { draggableId, destination, source } = result;
+    let { draggableId, destination, source } = result;
+    if (!destination) {
+      if (state.doneList.length === 0) {
+        destination = {
+          droppableId: "doneList",
+          index: 0,
+        };
+      } else if (state.inProgressList.length === 0) {
+        destination = {
+          droppableId: "inProgressList",
+          index: 0,
+        };
+      } else if (state.toDoList.length === 0) {
+        destination = {
+          droppableId: "toDoList",
+          index: 0,
+        };
+      } else {
+        return;
+      }
+    }
     let { droppableId: destinationDroppableId, index: destinationIndex } =
       destination;
     const { droppableId: sourceDroppableId, index: sourceIndex } = source; // "Done", 0
@@ -52,6 +72,10 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
     let staticList: Task[] = [...state[sourceDroppableId]];
     let decrementedList = [...state[sourceDroppableId]];
     let incrementedList = [...state[destinationDroppableId]];
+
+    if (incrementedList.length === 0) {
+      incrementedList.push();
+    }
     if (
       sourceDroppableId === destinationDroppableId &&
       sourceIndex !== destinationIndex

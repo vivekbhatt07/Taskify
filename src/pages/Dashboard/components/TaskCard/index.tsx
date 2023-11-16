@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useState } from "react";
+import { FC, ReactNode, useState } from "react";
 import { styled } from "@mui/material/styles";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch, { SwitchProps } from "@mui/material/Switch";
@@ -37,9 +37,6 @@ const TaskCard: FC<TaskCardProps> = ({ taskData, index }) => {
 
   const [labelEl, setLabelEl] = useState<HTMLButtonElement | null>(null);
 
-  useEffect(() => {
-    console.log(labelEl, "labelel");
-  }, [labelEl]);
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -48,8 +45,6 @@ const TaskCard: FC<TaskCardProps> = ({ taskData, index }) => {
   };
 
   const handleClose = () => {
-    debugger;
-    console.log("close");
     setLabelEl(null);
   };
 

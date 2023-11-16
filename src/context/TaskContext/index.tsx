@@ -42,7 +42,6 @@ const TaskProvider: FC<{ children: ReactNode }> = ({ children }) => {
     try {
       const response = await getProjectListDataResponse(projectId);
       if (response.status === 200) {
-        console.log(response);
         dispatch({
           type: "SET_LIST_DATA",
           payload: response.data,

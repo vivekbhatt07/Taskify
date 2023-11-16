@@ -40,7 +40,6 @@ const ProjectProvider: FC<{ children: ReactNode }> = ({ children }) => {
     setIsLoading(true);
     try {
       const response = await getAllProjectsApiResponse(userId);
-      console.log(response);
       if (response.status === 200) {
         dispatch({ type: "SET_PROJECTS", payload: response.data });
       }
