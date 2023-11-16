@@ -1,17 +1,11 @@
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useMode, useProject, useUser } from "../../context";
 import { TolltipIconAction, IconButton } from "../../components";
-import {
-  Dashboard,
-  DonutSmall,
-  TableChart,
-  Person,
-  Logout,
-} from "@mui/icons-material";
+import { Person, Logout } from "@mui/icons-material";
 
 import "./Header.css";
-import { Popover, Typography } from "@mui/material";
+import { Popover } from "@mui/material";
 
 const Header = () => {
   const { dispatch } = useProject();
@@ -31,11 +25,6 @@ const Header = () => {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
-  const headerNavList = [
-    { title: "Dashboard", reach: "/", icon: <Dashboard /> },
-    { title: "Charts", reach: "/metrics", icon: <DonutSmall /> },
-    { title: "Table", reach: "/table", icon: <TableChart /> },
-  ];
   return (
     <header
       className={`px-2 py-4 text-xl ${isDarkTheme ? "dark" : "light"}-header`}
@@ -44,31 +33,7 @@ const Header = () => {
         <h1>
           <Link to="/">Taskify</Link>
         </h1>
-        {state.token && (
-          <div className="flex gap-3">
-            {headerNavList.map((item, index) => {
-              return (
-                <NavLink to={item.reach} key={index}>
-                  {({ isActive }) => (
-                    <TolltipIconAction
-                      position={
-                        index === 0
-                          ? "left"
-                          : index === headerNavList.length - 1
-                          ? "right"
-                          : "bottom"
-                      }
-                      title={item.title}
-                      isActive={isActive}
-                    >
-                      {item.icon}
-                    </TolltipIconAction>
-                  )}
-                </NavLink>
-              );
-            })}
-          </div>
-        )}
+
         <div className="flex gap-3 items-center">
           {state.token && (
             <>

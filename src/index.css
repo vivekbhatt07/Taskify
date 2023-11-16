@@ -14,3 +14,11 @@
 ::-webkit-scrollbar-thumb {
   background-color: #57534e;
 }
+
+.task_column_body_light::-webkit-scrollbar-track {
+  background-color: #d6d3d1;
+}
+
+.task_column_body_dark::-webkit-scrollbar-track {
+  background-color: #292524;
+}

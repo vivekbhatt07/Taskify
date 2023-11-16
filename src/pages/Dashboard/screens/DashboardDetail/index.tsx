@@ -1,32 +1,163 @@
 import { FC, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import {
-  IconButton,
-  TolltipIconAction,
-  ModalProvider,
-} from "../../../../components";
+import { useParams, useNavigate } from "react-router-dom";
+import { TolltipIconAction, ModalProvider } from "../../../../components";
 import { PageContainer } from "../../../../layout";
 import { TaskCard, TaskColumn } from "../../components";
-import { Add } from "@mui/icons-material";
+import {
+  Add,
+  ArrowBack,
+  Dashboard,
+  DonutSmall,
+  TableChart,
+} from "@mui/icons-material";
 import TaskForm from "../../../../components/TaskForm";
 import { useProject, useTask } from "../../../../context";
+import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
+import { Task } from "../../../../types";
 
 interface DashboardDetailProps {}
 
 const DashboardDetail: FC<DashboardDetailProps> = () => {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState(0);
   const { state, getProjectDataHandler } = useTask();
   const { dispatch } = useProject();
+  const { dispatch: taskDispatch } = useTask();
   const { projectId } = useParams();
 
-  const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState<Boolean>(false);
+  const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState<boolean>(false);
 
   const openAddTaskModal = () => setIsAddTaskModalOpen(true);
   const closeAddTaskModal = () => setIsAddTaskModalOpen(false);
 
-  const dashboardGridStyle = {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-    gap: "16px",
+  const headerNavList = [
+    { title: "Dashboard", reach: 0, icon: <Dashboard /> },
+    { title: "Charts", reach: 1, icon: <DonutSmall /> },
+    { title: "Table", reach: 2, icon: <TableChart /> },
+  ];
+
+  const onDragEnd = (result: DropResult) => {
+    console.log(result);
+    let { draggableId, destination, source } = result;
+    if (!destination) {
+      if (state.doneList.length === 0) {
+        destination = {
+          droppableId: "doneList",
+          index: 0,
+        };
+      } else if (state.inProgressList.length === 0) {
+        destination = {
+          droppableId: "inProgressList",
+          index: 0,
+        };
+      } else if (state.toDoList.length === 0) {
+        destination = {
+          droppableId: "toDoList",
+          index: 0,
+        };
+      } else {
+        return;
+      }
+    }
+    let { droppableId: destinationDroppableId, index: destinationIndex } =
+      destination;
+    const { droppableId: sourceDroppableId, index: sourceIndex } = source; // "Done", 0
+    if (!destination) return;
+    if (
+      sourceDroppableId === destinationDroppableId &&
+      sourceIndex === destinationIndex
+    )
+      return;
+
+    let staticList: Task[] = [...state[sourceDroppableId]];
+    let decrementedList = [...state[sourceDroppableId]];
+    let incrementedList = [...state[destinationDroppableId]];
+
+    if (incrementedList.length === 0) {
+      incrementedList.push();
+    }
+    if (
+      sourceDroppableId === destinationDroppableId &&
+      sourceIndex !== destinationIndex
+    ) {
+      const foundTask = staticList.find((task) => {
+        return task._id === draggableId;
+      });
+      let leftSlice;
+      let rightSlice;
+      if (sourceIndex > destinationIndex) {
+        if (destinationIndex === 0) {
+          staticList = staticList.filter((task) => task._id !== foundTask?._id);
+          staticList.unshift(foundTask);
+        } else {
+          rightSlice = staticList.slice(sourceIndex + 1, staticList.length);
+          leftSlice = [
+            ...staticList.slice(0, destinationIndex),
+            foundTask,
+            ...staticList.slice(destinationIndex, sourceIndex),
+          ];
+          staticList = [...leftSlice, ...rightSlice];
+        }
+      }
+      if (sourceIndex < destinationIndex) {
+        if (destinationIndex === staticList.length - 1) {
+          staticList = staticList.filter((task) => task._id !== foundTask?._id);
+          staticList.push(foundTask);
+        } else {
+          rightSlice = [
+            ...staticList.slice(sourceIndex + 1, destinationIndex + 1),
+            foundTask,
+            ...staticList.slice(destinationIndex + 1, staticList.length),
+          ];
+          leftSlice = staticList.slice(0, sourceIndex);
+          staticList = [...leftSlice, ...rightSlice];
+        }
+      }
+      taskDispatch({
+        type: "SET_LIST_DATA",
+        payload: {
+          ...state,
+          [sourceDroppableId]: staticList,
+        },
+      });
+    }
+    if (sourceDroppableId !== destinationDroppableId) {
+      const foundTask = decrementedList.find((task) => {
+        return task._id === draggableId;
+      });
+
+      decrementedList = decrementedList.filter(
+        (task) => task._id !== draggableId
+      );
+
+      if (destinationIndex === 0) {
+        incrementedList.unshift(foundTask);
+      }
+
+      if (destinationIndex === incrementedList.length) {
+        destinationIndex++;
+        incrementedList.push(foundTask);
+      }
+
+      if (0 < destinationIndex && destinationIndex < incrementedList.length) {
+        let leftSlice = incrementedList.slice(0, destinationIndex);
+        let rightSlice = incrementedList.slice(
+          destinationIndex,
+          incrementedList.length + 1
+        );
+
+        incrementedList = [...leftSlice, foundTask, ...rightSlice];
+      }
+
+      taskDispatch({
+        type: "SET_LIST_DATA",
+        payload: {
+          ...state,
+          [sourceDroppableId]: decrementedList,
+          [destinationDroppableId]: incrementedList,
+        },
+      });
+    }
   };
 
   useEffect(() => {
@@ -38,40 +169,135 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
 
   return (
     <PageContainer>
-      <div className="flex gap-2 relative" style={dashboardGridStyle}>
-        <div className="absolute">
-          <ModalProvider
-            isOpen={isAddTaskModalOpen}
-            title="Add Task"
-            OpenAction={
-              <TolltipIconAction
-                title="Add Task"
-                position="top"
-                onClick={openAddTaskModal}
-              >
-                <Add />
-              </TolltipIconAction>
-            }
-            closeModal={closeAddTaskModal}
+      <div className="flex flex-col gap-4">
+        <div className="flex gap-4">
+          <TolltipIconAction
+            position="top"
+            title="Back"
+            onClick={() => navigate(-1)}
           >
-            <TaskForm closeAction={closeAddTaskModal} projectId={projectId} />
-          </ModalProvider>
+            <ArrowBack />
+          </TolltipIconAction>
+          <div className="">
+            <ModalProvider
+              isOpen={isAddTaskModalOpen}
+              title="Add Task"
+              OpenAction={
+                <TolltipIconAction
+                  title="Add Task"
+                  position="top"
+                  onClick={openAddTaskModal}
+                >
+                  <Add />
+                </TolltipIconAction>
+              }
+              closeModal={closeAddTaskModal}
+            >
+              <TaskForm closeAction={closeAddTaskModal} projectId={projectId} />
+            </ModalProvider>
+          </div>
+          <div className="flex gap-3">
+            {headerNavList.map((item) => {
+              return (
+                <TolltipIconAction
+                  key={item.reach}
+                  position={
+                    item.reach === 0
+                      ? "top"
+                      : item.reach === headerNavList.length - 1
+                      ? "right"
+                      : "top"
+                  }
+                  isActive={activeTab === item.reach}
+                  onClick={() => setActiveTab(item.reach)}
+                  title={item.title}
+                >
+                  {item.icon}
+                </TolltipIconAction>
+              );
+            })}
+          </div>
         </div>
-        <TaskColumn columnType="To Do" columnColor="#0891b2">
-          {state?.toDoList.map((task, index) => {
-            return <TaskCard taskData={task} key={index} />;
-          })}
-        </TaskColumn>
-        <TaskColumn columnType="In Progress" columnColor="#f59e0b">
-          {state?.inProgressList.map((task, index) => {
-            return <TaskCard taskData={task} key={index} />;
-          })}
-        </TaskColumn>
-        <TaskColumn columnType="Done" columnColor="#16a34a">
-          {state?.doneList.map((task, index) => {
-            return <TaskCard taskData={task} key={index} />;
-          })}
-        </TaskColumn>
+        {activeTab === 0 && (
+          <div className="flex gap-2 relative">
+            <DragDropContext onDragEnd={onDragEnd}>
+              <div className="flex w-full gap-4">
+                <TaskColumn columnType="To Do">
+                  <Droppable droppableId="toDoList">
+                    {(provided, snapshot) => (
+                      <div
+                        className={`flex flex-col gap-4 ${
+                          snapshot.isDraggingOver ? "dragActive" : ""
+                        }`}
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                      >
+                        {state?.toDoList.map((task, index) => {
+                          return (
+                            <TaskCard
+                              taskData={task}
+                              key={task._id}
+                              index={index}
+                            />
+                          );
+                        })}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </TaskColumn>
+                <TaskColumn columnType="In Progress">
+                  <Droppable droppableId="inProgressList">
+                    {(provided, snapshot) => (
+                      <div
+                        className={`flex flex-col gap-4 ${
+                          snapshot.isDraggingOver ? "dragActive" : ""
+                        }`}
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                      >
+                        {state?.inProgressList.map((task, index) => {
+                          return (
+                            <TaskCard
+                              taskData={task}
+                              key={task._id}
+                              index={index}
+                            />
+                          );
+                        })}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </TaskColumn>
+                <TaskColumn columnType="Done">
+                  <Droppable droppableId="doneList">
+                    {(provided, snapshot) => (
+                      <div
+                        className={`flex flex-col gap-4 ${
+                          snapshot.isDraggingOver ? "dragActive" : ""
+                        }`}
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                      >
+                        {state?.doneList.map((task, index) => {
+                          return (
+                            <TaskCard
+                              taskData={task}
+                              key={task._id}
+                              index={index}
+                            />
+                          );
+                        })}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </TaskColumn>
+              </div>
+            </DragDropContext>
+          </div>
+        )}
       </div>
     </PageContainer>
   );

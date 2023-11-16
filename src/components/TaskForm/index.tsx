@@ -5,19 +5,20 @@ import {
   MenuItem,
   FormControl,
   Select,
+  SelectChangeEvent,
 } from "@mui/material";
 
 import AutoCompleteWithChips from "../AutoCompleteWithChips";
 import { TextButton } from "../../components";
-import { useProject, useTask } from "../../context";
+import { useTask } from "../../context";
 import { Task } from "../../types";
 
 interface TaskFormProps {
-  children: ReactNode;
+  children?: ReactNode;
   closeAction: () => void;
-  isEdit: Boolean;
-  taskData: Task;
-  projectId: string | undefined;
+  isEdit?: boolean;
+  taskData?: Task;
+  projectId?: string | undefined;
 }
 
 const TaskForm: FC<TaskFormProps> = ({
@@ -44,8 +45,19 @@ const TaskForm: FC<TaskFormProps> = ({
     labels: isEdit ? taskData.labels : [],
   });
 
-  const handleTaskFormDataInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const handleTaskFormDataInput = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setTaskFormData((prevTaskFormData) => {
+      return { ...prevTaskFormData, [name]: value };
+    });
+  };
+
+  const handleSelectTaskFormDataInput = (
+    event: SelectChangeEvent<
+      "Low" | "Medium" | "High" | "ToDo" | "InProgress" | "Done"
+    >
+  ) => {
+    const { name, value } = event.target;
     setTaskFormData((prevTaskFormData) => {
       return { ...prevTaskFormData, [name]: value };
     });
@@ -62,6 +74,7 @@ const TaskForm: FC<TaskFormProps> = ({
   const handleTaskFormDataSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isEdit) {
+      if (!taskData._id) return;
       if (taskFormData.variant === "ToDo") {
         updateToDoTaskHandler({
           taskId: taskData._id,
@@ -79,6 +92,7 @@ const TaskForm: FC<TaskFormProps> = ({
         });
       }
     } else {
+      if (!projectId) return;
       if (taskFormData.variant === "ToDo") {
         addToDoTaskHandler({
           task: taskFormData,
@@ -134,7 +148,7 @@ const TaskForm: FC<TaskFormProps> = ({
             id="task_card_select_priority"
             name="priority"
             value={taskFormData.priority}
-            onChange={handleTaskFormDataInput}
+            onChange={handleSelectTaskFormDataInput}
             label="Priority"
           >
             {["Low", "Medium", "High"].map((priority, index) => (
@@ -152,7 +166,7 @@ const TaskForm: FC<TaskFormProps> = ({
             id="task_card_select_variant"
             name="variant"
             value={taskFormData.variant}
-            onChange={handleTaskFormDataInput}
+            onChange={handleSelectTaskFormDataInput}
             label="Variant"
           >
             {["ToDo", "InProgress", "Done"].map((variant, index) => (

@@ -20,7 +20,8 @@ interface TolltipIconActionProps {
     | undefined;
   title: String;
   isActive?: Boolean;
-  onClick?: () => void;
+
+  onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
   className?: String;
   iconBtnSx?: any;
 }
