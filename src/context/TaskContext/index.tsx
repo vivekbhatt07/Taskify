@@ -29,6 +29,7 @@ import {
 
 import { TaskContextType } from "./taskContextTypes";
 import { initialTaskState, taskReducer } from "./taskReducer";
+import { toastHandler } from "../../utils";
 
 const TextContext = createContext<TaskContextType | undefined>(undefined);
 
@@ -62,6 +63,7 @@ const TaskProvider: FC<{ children: ReactNode }> = ({ children }) => {
           type: "ADD_TODO_TASK",
           payload: response.data.task,
         });
+        toastHandler("success", "Task Added to To Do");
       }
     } catch (error) {
       console.error(error);
@@ -79,6 +81,7 @@ const TaskProvider: FC<{ children: ReactNode }> = ({ children }) => {
           type: "ADD_INPROGRESS_TASK",
           payload: response.data.task,
         });
+        toastHandler("success", "Task Added to In Progress");
       }
     } catch (error) {
       console.error(error);
@@ -93,6 +96,7 @@ const TaskProvider: FC<{ children: ReactNode }> = ({ children }) => {
           type: "ADD_DONE_TASK",
           payload: response.data.task,
         });
+        toastHandler("success", "Task Added to Done");
       }
     } catch (error) {
       console.error(error);

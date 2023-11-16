@@ -61,9 +61,7 @@ export type AddTaskParamsType = {
   projectId: string;
 };
 
-export type DeleteTaskParamsType = {
-  taskId: string;
-};
+export type DeleteTaskParamsType = string;
 
 export type UpdateTaskParamsType = {
   taskId: string;

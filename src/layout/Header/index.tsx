@@ -11,7 +11,7 @@ import {
 } from "@mui/icons-material";
 
 import "./Header.css";
-import { Popover, Typography } from "@mui/material";
+import { Popover } from "@mui/material";
 
 const Header = () => {
   const { dispatch } = useProject();

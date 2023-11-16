@@ -70,7 +70,11 @@ const Dashboard: FC<DashboardProps> = () => {
                     position="top"
                     title="Add Project"
                     onClick={openAddProjectModal}
-                    iconBtnSx={{ width: "200px", height: "200px" }}
+                    iconBtnSx={{
+                      width: "150px",
+                      height: "150px",
+                      borderRadius: "16px",
+                    }}
                   >
                     <Add sx={{ width: "80px", height: "80px" }} />
                   </TolltipIconAction>

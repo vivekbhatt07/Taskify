@@ -71,6 +71,7 @@ export default function AutoCompleteWithTags(props: AutoCompleteWithTagsProps) {
 
         return (
           <TextField
+            required={values.length === 0}
             {...params}
             type={type}
             label={label}
@@ -78,6 +79,7 @@ export default function AutoCompleteWithTags(props: AutoCompleteWithTagsProps) {
             inputProps={{
               ...params.inputProps,
               value: inputValue,
+              maxLength: 15,
             }}
           />
         );

@@ -10,7 +10,7 @@ const ProjectCard = ({ projectData }) => {
   const { deleteProjectHandler } = useProject();
 
   const [isEditProjectModalOpen, setIsEditProjectModalOpen] =
-    useState<Boolean>(false);
+    useState<boolean>(false);
 
   const openEditProjectModal = () => setIsEditProjectModalOpen(true);
   const closeEditProjectModal = () => setIsEditProjectModalOpen(false);

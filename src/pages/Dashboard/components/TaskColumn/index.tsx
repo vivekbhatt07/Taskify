@@ -12,7 +12,7 @@ const TaskColumn: FC<TaskColumnProps> = ({
   children,
 }) => {
   return (
-    <div className="bg-800 min-h-[300px] rounded-lg overflow-hidden">
+    <div className="bg-400 dark:bg-800 min-h-[300px] rounded-lg overflow-hidden basis-1/3">
       {/* HEAD */}
       <div
         className={`p-4 uppercase text-center`}
@@ -21,7 +21,9 @@ const TaskColumn: FC<TaskColumnProps> = ({
         {columnType}
       </div>
       {/* BODY */}
-      <div className="p-4 flex flex-col gap-4">{children}</div>
+      <div className="p-4 flex flex-col gap-4 max-h-[500px] overflow-y-scroll">
+        {children}
+      </div>
     </div>
   );
 };
