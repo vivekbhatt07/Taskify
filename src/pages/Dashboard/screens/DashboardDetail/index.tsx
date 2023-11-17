@@ -14,6 +14,7 @@ import TaskForm from "../../../../components/TaskForm";
 import { useProject, useTask } from "../../../../context";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { Task } from "../../../../types";
+import DoughnutTaskTab from "./DoughnutTaskTab";
 
 interface DashboardDetailProps {}
 
@@ -298,6 +299,8 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
             </DragDropContext>
           </div>
         )}
+
+        {activeTab === 1 && <DoughnutTaskTab />}
       </div>
     </PageContainer>
   );
