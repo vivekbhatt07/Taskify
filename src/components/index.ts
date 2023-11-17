@@ -3,6 +3,7 @@ import ModalProvider from "./ModalProvider";
 import AutoCompleteWithChips from "./AutoCompleteWithChips";
 import { DarkLoader, LightLoader } from "./Loader";
 import DoughnutProvider from "./DoughnutProvider";
+import BarProvider from "./BarProvider";
 
 export {
   IconButton,
@@ -13,4 +14,5 @@ export {
   LightLoader,
   DarkLoader,
   DoughnutProvider,
+  BarProvider,
 };

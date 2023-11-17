@@ -8,19 +8,22 @@ import {
   ArrowBack,
   Dashboard,
   DonutSmall,
-  TableChart,
+  Leaderboard,
+  PieChart,
 } from "@mui/icons-material";
 import TaskForm from "../../../../components/TaskForm";
 import { useProject, useTask } from "../../../../context";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { Task } from "../../../../types";
 import DoughnutTaskTab from "./DoughnutTaskTab";
+import BarTab from "./BarTab";
 
 interface DashboardDetailProps {}
 
 const DashboardDetail: FC<DashboardDetailProps> = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
+  const [activeChart, setActiveChart] = useState("Pie");
   const { state, getProjectDataHandler } = useTask();
   const { dispatch } = useProject();
   const { dispatch: taskDispatch } = useTask();
@@ -34,7 +37,7 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
   const headerNavList = [
     { title: "Dashboard", reach: 0, icon: <Dashboard /> },
     { title: "Charts", reach: 1, icon: <DonutSmall /> },
-    { title: "Table", reach: 2, icon: <TableChart /> },
+    // { title: "Table", reach: 2, icon: <TableChart /> },
   ];
 
   const onDragEnd = (result: DropResult) => {
@@ -300,7 +303,47 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
           </div>
         )}
 
-        {activeTab === 1 && <DoughnutTaskTab />}
+        {activeTab === 1 && (
+          <div className="flex flex-col gap-8">
+            <div className="flex justify-center">
+              <div className="flex bg-[#ddd] rounded-md overflow-hidden">
+                <TolltipIconAction
+                  title="Pie Chart"
+                  position="bottom"
+                  iconBtnSx={{
+                    borderRadius: "0",
+                    "&:hover": {
+                      backgroundColor:
+                        activeChart === "Pie" ? "#7c3aed" : "#ccc",
+                    },
+                  }}
+                  onClick={() => setActiveChart("Pie")}
+                  isActive={activeChart === "Pie"}
+                >
+                  <PieChart />
+                </TolltipIconAction>
+
+                <TolltipIconAction
+                  title="Bar Chart"
+                  position="bottom"
+                  iconBtnSx={{
+                    borderRadius: "0",
+                    "&:hover": {
+                      backgroundColor:
+                        activeChart === "Bar" ? "#7c3aed" : "#ccc",
+                    },
+                  }}
+                  onClick={() => setActiveChart("Bar")}
+                  isActive={activeChart === "Bar"}
+                >
+                  <Leaderboard />
+                </TolltipIconAction>
+              </div>
+            </div>
+            {activeChart === "Pie" && <DoughnutTaskTab />}
+            <div>{activeChart === "Bar" && <BarTab />}</div>
+          </div>
+        )}
       </div>
     </PageContainer>
   );

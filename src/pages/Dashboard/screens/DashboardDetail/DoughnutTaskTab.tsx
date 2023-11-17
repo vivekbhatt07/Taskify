@@ -39,9 +39,7 @@ const DoughnutTaskTab = () => {
   return (
     <div>
       <FormControl>
-        <InputLabel id="doughnut_type_select_label" sx={{ color: "#fff" }}>
-          Category
-        </InputLabel>
+        <InputLabel id="doughnut_type_select_label">Category</InputLabel>
         <Select
           labelId="doughnut_type_select_label"
           id="doughnut_type_select"
