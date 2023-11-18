@@ -4,11 +4,7 @@ import { TextField } from "@mui/material";
 import { TextButton } from "../../components";
 import { useProject, useUser } from "../../context";
 
-import {
-  Project,
-  AddProjectParamsType,
-  UpdateProjectParamsType,
-} from "../../types";
+import { Project } from "../../types";
 
 interface ProjectFormDataType {
   title: string;
@@ -32,8 +28,8 @@ const ProjectForm: FC<ProjectFormProps> = ({
   } = useUser();
 
   const [projectFormData, setProjectFormData] = useState<ProjectFormDataType>({
-    title: isEdit ? projectData?.title : "",
-    description: isEdit ? projectData?.description : "",
+    title: isEdit ? projectData?.title ?? "" : "",
+    description: isEdit ? projectData?.description ?? "" : "",
   });
 
   const handleProjectFormDataInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +43,7 @@ const ProjectForm: FC<ProjectFormProps> = ({
     e.preventDefault();
     if (isEdit) {
       updateProjectHandler({
-        projectId: projectData._id,
+        projectId: projectData?._id ?? "",
         project: projectFormData,
       });
     } else {

@@ -1,5 +1,5 @@
 export interface Project {
-  _id: string;
+  _id?: string;
   title: string;
   description: string;
 }
@@ -27,7 +27,7 @@ export interface Task {
 
 export type AddProjectParamsType = {
   project: {
-    _id: string;
+    _id?: string;
     title: string;
     description: string;
   };
@@ -39,7 +39,7 @@ export type DeleteProjectParamsType = string;
 export type UpdateProjectParamsType = {
   projectId: string;
   project: {
-    _id: string;
+    _id?: string;
     title: string;
     description: string;
   };
