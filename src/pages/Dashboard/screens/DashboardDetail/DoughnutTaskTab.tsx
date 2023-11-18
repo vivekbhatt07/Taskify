@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { useState } from "react";
 import { DoughnutProvider } from "../../../../components";
 import { useTask } from "../../../../context";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
@@ -7,8 +7,8 @@ const DoughnutTaskTab = () => {
   const [selectedCategory, setSelectedCategory] = useState("Priority");
   const { state } = useTask();
 
-  let labels = [];
-  let values = [];
+  let labels: string[] = [];
+  let values: number[] = [];
 
   if (selectedCategory === "Priority") {
     const priorityLabels = ["Low", "Medium", "High"];
