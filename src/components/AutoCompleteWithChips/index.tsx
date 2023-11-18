@@ -1,9 +1,9 @@
-import React, { useState, KeyboardEvent } from "react";
+import { useState, KeyboardEvent } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 
 interface AutoCompleteWithTagsProps {
-  type?: "text";
+  type?: "text" | "number";
   tags?: string[];
   label?: string;
   placeholder?: string;

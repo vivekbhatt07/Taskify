@@ -37,12 +37,12 @@ const TaskForm: FC<TaskFormProps> = ({
   } = useTask();
 
   const [taskFormData, setTaskFormData] = useState({
-    title: isEdit ? taskData.title : "",
-    description: isEdit ? taskData.description : "",
-    dueDate: isEdit ? taskData.dueDate : "",
-    priority: isEdit ? taskData.priority : "Low",
-    variant: isEdit ? taskData.variant : "ToDo",
-    labels: isEdit ? taskData.labels : [],
+    title: isEdit ? taskData?.title ?? "" : "",
+    description: isEdit ? taskData?.description ?? "" : "",
+    dueDate: isEdit ? taskData?.dueDate ?? "" : "",
+    priority: isEdit ? taskData?.priority ?? "Low" : "Low",
+    variant: isEdit ? taskData?.variant ?? "ToDo" : "ToDo",
+    labels: isEdit ? taskData?.labels ?? [] : [],
   });
 
   const handleTaskFormDataInput = (event: ChangeEvent<HTMLInputElement>) => {
@@ -74,20 +74,20 @@ const TaskForm: FC<TaskFormProps> = ({
   const handleTaskFormDataSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isEdit) {
-      if (!taskData._id) return;
+      // if (!taskData._id) return;
       if (taskFormData.variant === "ToDo") {
         updateToDoTaskHandler({
-          taskId: taskData._id,
+          taskId: taskData?._id ?? "",
           updatedFields: taskFormData,
         });
       } else if (taskFormData.variant === "InProgress") {
         updateInProgressTaskHandler({
-          taskId: taskData._id,
+          taskId: taskData?._id ?? "",
           updatedFields: taskFormData,
         });
       } else if (taskFormData.variant === "Done") {
         updateDoneTaskHandler({
-          taskId: taskData._id,
+          taskId: taskData?._id ?? "",
           updatedFields: taskFormData,
         });
       }

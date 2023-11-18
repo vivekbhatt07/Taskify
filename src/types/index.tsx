@@ -14,7 +14,7 @@ export interface User {
 }
 
 export interface Task {
-  _id?: string | undefined;
+  _id?: string;
   title: string;
   description: string;
   dueDate: string;
