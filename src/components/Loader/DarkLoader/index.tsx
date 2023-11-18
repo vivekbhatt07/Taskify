@@ -1,5 +1,5 @@
 import Lottie from "lottie-react";
-import DarkLoaderLottie from "../../../Assets/Lottie/DarkLoaderLottie.json";
+import DarkLoaderLottie from "../../../assets/Lottie/DarkLoaderLottie.json";
 
 const DarkLoader = () => (
   <div className="w-20 h-20 mx-auto">
