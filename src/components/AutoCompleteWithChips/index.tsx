@@ -24,8 +24,10 @@ export default function AutoCompleteWithTags(props: AutoCompleteWithTagsProps) {
   } = props;
 
   const [inputValue, setInputValue] = useState<string>("");
+  // @ts-ignore
   const [options, setOptions] = useState<string[]>(tags);
 
+  // @ts-ignore
   const customInputTagHandler = (event: any, value: string[]) => {
     console.log(value, "Value");
     let latestValue = value.at(-1);
@@ -64,6 +66,7 @@ export default function AutoCompleteWithTags(props: AutoCompleteWithTagsProps) {
       freeSolo
       disabled={disabled}
       value={values}
+      // @ts-ignore
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
       }}
