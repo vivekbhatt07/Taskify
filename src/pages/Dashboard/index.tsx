@@ -9,9 +9,7 @@ import { PageContainer } from "../../layout";
 import { ProjectCard } from "./components";
 import { Add } from "@mui/icons-material";
 import ProjectForm from "../../components/ProjectForm";
-
 import { useMode, useProject } from "../../context";
-
 interface DashboardProps {}
 
 const Dashboard: FC<DashboardProps> = () => {

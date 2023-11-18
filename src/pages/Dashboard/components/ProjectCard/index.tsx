@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useState, FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { Delete, Edit } from "@mui/icons-material";
 import { ModalProvider, TolltipIconAction } from "../../../../components";
 import ProjectForm from "../../../../components/ProjectForm";
 import { useProject } from "../../../../context";
+import { Project } from "../../../../types";
 
-const ProjectCard = ({ projectData }) => {
+type ProjectCardType = {
+  projectData: Project;
+};
+
+const ProjectCard: FC<ProjectCardType> = ({ projectData }) => {
   const navigate = useNavigate();
   const { deleteProjectHandler } = useProject();
 
@@ -52,9 +57,7 @@ const ProjectCard = ({ projectData }) => {
           closeModal={closeEditProjectModal}
         >
           <ProjectForm
-            closeAction={(e) => {
-              closeEditProjectModal(e);
-            }}
+            closeAction={closeEditProjectModal}
             projectData={projectData}
             isEdit
           />
