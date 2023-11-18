@@ -27,6 +27,7 @@ export default function AutoCompleteWithTags(props: AutoCompleteWithTagsProps) {
   const [options, setOptions] = useState<string[]>(tags);
 
   const customInputTagHandler = (event: any, value: string[]) => {
+    console.log(value, "Value");
     let latestValue = value.at(-1);
     if (type === "number") latestValue = parseFloat(latestValue);
     if (typeof value.at(-1) === "string") {
@@ -55,9 +56,9 @@ export default function AutoCompleteWithTags(props: AutoCompleteWithTagsProps) {
       multiple
       id="multiple-limit-tags"
       options={options}
-      getOptionLabel={(option) => {
-        return <span title={option}>{option}</span>;
-      }}
+      // getOptionLabel={(option) => {
+      //   return <span title={option}>{option}</span>;
+      // }}
       freeSolo
       disabled={disabled}
       value={values}

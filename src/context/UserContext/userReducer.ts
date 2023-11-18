@@ -1,9 +1,15 @@
 import { UserStateType, UserActionType } from "./userContextTypes";
 
+const storedUserCredentialsRaw = localStorage.getItem("userCredentials");
+
+const storedUserCredentials = storedUserCredentialsRaw
+  ? JSON.parse(storedUserCredentialsRaw)
+  : { user: null, token: null };
+
 const initialUserState = {
   userList: [],
-  user: JSON.parse(localStorage.getItem("userCredentials"))?.user,
-  token: JSON.parse(localStorage.getItem("userCredentials"))?.token,
+  user: storedUserCredentials?.user,
+  token: storedUserCredentials?.token,
   error: null,
 };
 
