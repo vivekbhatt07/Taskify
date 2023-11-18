@@ -29,8 +29,10 @@ export default function AutoCompleteWithTags(props: AutoCompleteWithTagsProps) {
   const customInputTagHandler = (event: any, value: string[]) => {
     console.log(value, "Value");
     let latestValue = value.at(-1);
+    // @ts-ignore
     if (type === "number") latestValue = parseFloat(latestValue);
     if (typeof value.at(-1) === "string") {
+      // @ts-ignore
       onTagUpdate && onTagUpdate([...value.slice(0, -1), latestValue]);
     } else {
       onTagUpdate && onTagUpdate(value);

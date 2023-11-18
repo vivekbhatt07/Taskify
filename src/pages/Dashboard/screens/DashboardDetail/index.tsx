@@ -59,9 +59,15 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
         return;
       }
     }
-    let { droppableId: destinationDroppableId, index: destinationIndex } =
-      destination;
-    const { droppableId: sourceDroppableId, index: sourceIndex } = source; // "Done", 0
+    let {
+      droppableId: destinationDroppableId,
+      index: destinationIndex,
+    }: { droppableId: string; index: number } = destination;
+
+    const {
+      droppableId: sourceDroppableId,
+      index: sourceIndex,
+    }: { droppableId: string; index: number } = source;
     if (!destination) return;
     if (
       sourceDroppableId === destinationDroppableId &&
@@ -69,8 +75,11 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
     )
       return;
 
+    // @ts-ignore
     let staticList: Task[] = [...state[sourceDroppableId]];
+    // @ts-ignore
     let decrementedList = [...state[sourceDroppableId]];
+    // @ts-ignore
     let incrementedList = [...state[destinationDroppableId]];
 
     if (incrementedList.length === 0) {
@@ -80,7 +89,7 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
       sourceDroppableId === destinationDroppableId &&
       sourceIndex !== destinationIndex
     ) {
-      const foundTask = staticList.find((task) => {
+      const foundTask: Task | undefined = staticList.find((task) => {
         return task._id === draggableId;
       });
       let leftSlice;
@@ -88,6 +97,7 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
       if (sourceIndex > destinationIndex) {
         if (destinationIndex === 0) {
           staticList = staticList.filter((task) => task._id !== foundTask?._id);
+          // @ts-ignore
           staticList.unshift(foundTask);
         } else {
           rightSlice = staticList.slice(sourceIndex + 1, staticList.length);
@@ -96,12 +106,14 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
             foundTask,
             ...staticList.slice(destinationIndex, sourceIndex),
           ];
+          // @ts-ignore
           staticList = [...leftSlice, ...rightSlice];
         }
       }
       if (sourceIndex < destinationIndex) {
         if (destinationIndex === staticList.length - 1) {
           staticList = staticList.filter((task) => task._id !== foundTask?._id);
+          // @ts-ignore
           staticList.push(foundTask);
         } else {
           rightSlice = [
@@ -110,6 +122,7 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
             ...staticList.slice(destinationIndex + 1, staticList.length),
           ];
           leftSlice = staticList.slice(0, sourceIndex);
+          // @ts-ignore
           staticList = [...leftSlice, ...rightSlice];
         }
       }

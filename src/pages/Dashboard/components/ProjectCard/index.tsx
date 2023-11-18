@@ -34,7 +34,9 @@ const ProjectCard: FC<ProjectCardType> = ({ projectData }) => {
           title="Delete Project"
           onClick={(e) => {
             e.stopPropagation();
-            deleteProjectHandler(projectData._id);
+            if (projectData?._id) {
+              deleteProjectHandler(projectData?._id);
+            }
           }}
         >
           <Delete />
