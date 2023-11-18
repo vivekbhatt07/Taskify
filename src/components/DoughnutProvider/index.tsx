@@ -1,20 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { FC } from "react";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  ChartOptions,
+} from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-// import { useMediaQuery } from "react-responsive";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-function DoughnutProvider({
+type DoughnutProviderType = {
+  doughnutTitle: string;
+  doughnutLabel: string[];
+  doughnutData: number[];
+};
+
+const DoughnutProvider: FC<DoughnutProviderType> = ({
   doughnutTitle,
   doughnutLabel,
   doughnutData,
-  style,
-}) {
-  // const [toggle, setToggle] = useState(false);
-  // const isDesktop = useMediaQuery({ minWidth: "780px" });
-
-  const data = {
+}) => {
+  const data: any = {
     labels: doughnutLabel,
     datasets: [
       {
@@ -40,7 +47,7 @@ function DoughnutProvider({
     ],
   };
 
-  const options = {
+  const options: ChartOptions = {
     // responsive: true,
     maintainAspectRatio: false,
     title: {
@@ -69,7 +76,8 @@ function DoughnutProvider({
         intersect: false,
         borderWidth: 0,
         callbacks: {
-          labelColor: function (context) {
+          // @ts-ignore
+          labelColor: function () {
             return {
               borderWidth: 2,
               borderRadius: 2,
@@ -88,6 +96,6 @@ function DoughnutProvider({
       <Doughnut data={data} options={options} />
     </div>
   );
-}
+};
 
 export default DoughnutProvider;

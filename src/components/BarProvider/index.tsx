@@ -1,3 +1,4 @@
+import { FC } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -6,6 +7,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  ChartOptions,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 
@@ -18,8 +20,13 @@ ChartJS.register(
   Legend
 );
 
-function BarProvider({ options, data }) {
+type BarProviderType = {
+  options: ChartOptions;
+  data: any;
+};
+
+const BarProvider: FC<BarProviderType> = ({ options, data }) => {
   return <Bar options={options} data={data} />;
-}
+};
 
 export default BarProvider;
