@@ -68,7 +68,7 @@ const Login = () => {
       <div className="max-w-xs m-auto md:max-w-sm lg:w-[24rem] border p-6 rounded-lg flex flex-col gap-10 md:mt-16 border-[#bbb]">
         <div className="flex w-full flex-col dark:bg-stone-900 gap-6">
           <h1 className="text-center text-2xl">
-            <div className="w-[100px] mx-auto rounded-md overflow-hidden">
+            <div className="w-[80px] mx-auto rounded-md overflow-hidden">
               <img src={TaskifyLogo} alt="logo" />
             </div>
           </h1>

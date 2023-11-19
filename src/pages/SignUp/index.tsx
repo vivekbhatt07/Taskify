@@ -82,9 +82,9 @@ const SignUp = () => {
 
   return (
     <PageContainer>
-      <div className="flex flex-col pt-14 gap-8">
+      <div className="flex flex-col pt-6 gap-8">
         <h1 className="text-center text-2xl">
-          <div className="w-[100px] mx-auto rounded-md overflow-hidden">
+          <div className="w-[80px] mx-auto rounded-md overflow-hidden">
             <img src={TaskifyLogo} alt="logo" />
           </div>
         </h1>
