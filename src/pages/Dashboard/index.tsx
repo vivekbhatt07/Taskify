@@ -24,7 +24,7 @@ const Dashboard: FC<DashboardProps> = () => {
   const projectGridStyle = {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(250px, 300px))",
-    gap: "16px",
+    gap: "32px",
   };
 
   return (

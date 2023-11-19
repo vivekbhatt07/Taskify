@@ -18,7 +18,7 @@ const TaskColumn: FC<TaskColumnProps> = ({ columnType, children }) => {
       </div>
       {/* BODY */}
       <div
-        className={`p-4 flex flex-col gap-4 max-h-[580px] overflow-y-scroll ${
+        className={`p-4 flex flex-col gap-4 max-h-[200px] lg:max-h-[500px] overflow-y-scroll ${
           isDarkTheme ? "task_column_body_dark" : "task_column_body_light"
         }`}
       >
