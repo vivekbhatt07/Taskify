@@ -28,6 +28,8 @@ function App() {
       <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
         <CssBaseline />
         <Routes>
+          <Route element={<Login />} path="/login" />
+          <Route element={<SignUp />} path="/signup" />
           <Route
             element={
               <RequiresAuth>
@@ -52,8 +54,7 @@ function App() {
             }
             path="/table"
           />
-          <Route element={<Login />} path="/login" />
-          <Route element={<SignUp />} path="/signup" />
+
           <Route
             element={
               <RequiresAuth>

@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  Button,
   FormControl,
   IconButton,
   InputAdornment,
@@ -10,19 +11,25 @@ import {
 } from "@mui/material";
 
 import {
-  ModalProvider,
   TextButton,
   DarkLoader,
   LightLoader,
+  TolltipIconAction,
 } from "../../components";
 import { PageContainer } from "../../layout";
 import { useMode, useUser } from "../../context";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  Visibility,
+  VisibilityOff,
+  RestartAlt,
+  ArrowForwardIos,
+} from "@mui/icons-material";
+
+import TaskifyLogo from "../../assets/image/logo/taskify.png";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { logInUserHandler, isLoading } = useUser();
-
+  const { state, logInUserHandler, isLoading } = useUser();
   const { isDarkTheme } = useMode();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -31,11 +38,6 @@ const Login = () => {
   ) => {
     event.preventDefault();
   };
-
-  const [isLoginGuestOpen, setIsLoginGuestOpen] = useState(false);
-
-  const openLoginGuestHandler = () => setIsLoginGuestOpen(true);
-  const closeLoginGuestHandler = () => setIsLoginGuestOpen(false);
 
   const [logInFormData, setLogInFormData] = useState({
     email: "",
@@ -63,9 +65,13 @@ const Login = () => {
 
   return (
     <PageContainer>
-      <div className="max-w-xs m-auto md:max-w-sm lg:w-[24rem] border p-6 rounded-lg flex flex-col gap-10 md:mt-16">
+      <div className="max-w-xs m-auto md:max-w-sm lg:w-[24rem] border p-6 rounded-lg flex flex-col gap-10 md:mt-16 border-[#bbb]">
         <div className="flex w-full flex-col dark:bg-stone-900 gap-6">
-          <h1 className="cursor-pointer text-center text-2xl">Taskify Login</h1>
+          <h1 className="text-center text-2xl">
+            <div className="w-[100px] mx-auto rounded-md overflow-hidden">
+              <img src={TaskifyLogo} alt="logo" />
+            </div>
+          </h1>
           <form
             className="flex flex-col gap-4"
             onSubmit={handleLogInFormSubmit}
@@ -103,54 +109,53 @@ const Login = () => {
                 }
               />
             </FormControl>
-            <div className="flex justify-between">
-              <TextButton type="submit" className="basis-1/2">
+            <div className="flex justify-between gap-2">
+              <TextButton
+                type="submit"
+                className="basis-1/2"
+                disabled={!logInFormData.email || !logInFormData.password}
+              >
                 Log in
               </TextButton>
-              <ModalProvider
-                isOpen={isLoginGuestOpen}
-                closeModal={closeLoginGuestHandler}
-                title="Log In As"
-                OpenAction={
-                  <TextButton
-                    className="w-full basis-1/2"
-                    type="button"
-                    onClick={() => {
-                      openLoginGuestHandler();
-                    }}
-                  >
-                    Log in as guest
-                  </TextButton>
-                }
+              <TolltipIconAction
+                position="bottom"
+                title="Clear Credentials"
+                onClick={() => {
+                  setLogInFormData({ email: "", password: "" });
+                }}
               >
-                <div className="h-[400px] overflow-y-scroll">
-                  {/* {state.userList.map((current) => {
-                    return (
-                      <article
-                        key={current._id}
-                        onClick={() => {}}
-                        className="flex cursor-pointer transition-all duration-200 rounded-md p-2 lg:flex-col lg:items-start lg:gap-2 xl:flex-row xl:justify-between xl:items-center hover:bg-300 dark:hover:bg-700"
-                      >
-                        <div className="flex gap-3 lg:justify-start lg:w-full xl:justify-start xl:gap-3">
-                          <div className="flex flex-col">
-                            <span className="font-medium">
-                              {current.username}
-                            </span>
-                          </div>
-                        </div>
-                      </article>
-                    );
-                  })} */}
-                </div>
-              </ModalProvider>
+                <RestartAlt />
+              </TolltipIconAction>
+              <TextButton
+                className="w-full basis-1/2"
+                type="button"
+                onClick={() => {
+                  setLogInFormData({
+                    email: state.userList[0].email,
+                    password: "HelloWorld07@",
+                  });
+                }}
+              >
+                Fill Credentials
+              </TextButton>
             </div>
           </form>
         </div>
         <div className="w-full items-center gap-4 justify-center dark:bg-stone-900 flex flex-col border-t pt-4 border-[#ddd]">
           <p>Don't have an account?</p>
-          <TextButton variant="text" onClick={() => navigate("/signup")}>
-            Sign Up
-          </TextButton>
+          <Button
+            variant="text"
+            onClick={() => navigate("/signup")}
+            sx={{
+              color: isDarkTheme ? "#8b5cf6" : "#6d28d9",
+              textTransform: "capitalize",
+              gap: "8px",
+              fontFamily: "inherit",
+              fontWeight: "400",
+            }}
+          >
+            Sign Up <ArrowForwardIos sx={{ fontSize: "12px" }} />
+          </Button>
         </div>
       </div>
       {isLoading && (isDarkTheme ? <DarkLoader /> : <LightLoader />)}

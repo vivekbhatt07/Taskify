@@ -1,6 +1,12 @@
 import { FC, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { TolltipIconAction, ModalProvider } from "../../../../components";
+import {
+  TolltipIconAction,
+  ModalProvider,
+  LightLoader,
+  DarkLoader,
+  EmptyListCard,
+} from "../../../../components";
 import { PageContainer } from "../../../../layout";
 import { TaskCard, TaskColumn } from "../../components";
 import {
@@ -12,7 +18,7 @@ import {
   PieChart,
 } from "@mui/icons-material";
 import TaskForm from "../../../../components/TaskForm";
-import { useProject, useTask } from "../../../../context";
+import { useMode, useProject, useTask } from "../../../../context";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { Task } from "../../../../types";
 import DoughnutTaskTab from "./DoughnutTaskTab";
@@ -24,10 +30,15 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
   const [activeChart, setActiveChart] = useState("Pie");
-  const { state, getProjectDataHandler } = useTask();
+  const {
+    state,
+    getProjectDataHandler,
+    dispatch: taskDispatch,
+    isLoading,
+  } = useTask();
   const { dispatch } = useProject();
-  const { dispatch: taskDispatch } = useTask();
   const { projectId } = useParams();
+  const { isDarkTheme } = useMode();
 
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState<boolean>(false);
 
@@ -37,11 +48,9 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
   const headerNavList = [
     { title: "Dashboard", reach: 0, icon: <Dashboard /> },
     { title: "Charts", reach: 1, icon: <DonutSmall /> },
-    // { title: "Table", reach: 2, icon: <TableChart /> },
   ];
 
   const onDragEnd = (result: DropResult) => {
-    console.log(result);
     let { draggableId, destination, source } = result;
     if (!destination) {
       if (state.doneList.length === 0) {
@@ -249,6 +258,11 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                       >
+                        {state?.toDoList.length === 0 && (
+                          <EmptyListCard>No Items</EmptyListCard>
+                        )}
+                        {isLoading &&
+                          (isDarkTheme ? <DarkLoader /> : <LightLoader />)}
                         {state?.toDoList.map((task, index) => {
                           return (
                             <TaskCard
@@ -273,6 +287,11 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                       >
+                        {state?.inProgressList.length === 0 && (
+                          <EmptyListCard>No Items</EmptyListCard>
+                        )}
+                        {isLoading &&
+                          (isDarkTheme ? <DarkLoader /> : <LightLoader />)}
                         {state?.inProgressList.map((task, index) => {
                           return (
                             <TaskCard
@@ -297,6 +316,11 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                       >
+                        {state?.doneList.length === 0 && (
+                          <EmptyListCard>No Items</EmptyListCard>
+                        )}
+                        {isLoading &&
+                          (isDarkTheme ? <DarkLoader /> : <LightLoader />)}
                         {state?.doneList.map((task, index) => {
                           return (
                             <TaskCard

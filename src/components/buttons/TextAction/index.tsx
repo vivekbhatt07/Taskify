@@ -5,7 +5,7 @@ const TextAction = styled(Button)<ButtonProps>(() => ({
   color: "#fff",
   backgroundColor: "#7c3aed",
   fontWeight: "400",
-  fontFamily: "inherit",
+  // fontFamily: "inherit",
   textTransform: "capitalize",
   padding: "0.4em 1.4em",
   borderRadius: "200px",

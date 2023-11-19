@@ -31,7 +31,7 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   // GET ALL USERS:
 
   const getAllUsersHandler = async () => {
-    setIsLoading(true);
+    // setIsLoading(true);
     try {
       const response = await getAllUsersApiResponse();
       if (response.status === 201) {
@@ -40,7 +40,7 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     } catch (error) {
       console.error(error);
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   };
 
@@ -51,6 +51,7 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     try {
       const response = await logInUserApiResponse({ email, password });
       if (response.status === 201) {
+        console.log("login success");
         localStorage.setItem(
           "userCredentials",
           JSON.stringify({
@@ -68,12 +69,13 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
             token: response.data.token,
           },
         });
-      }
-      if (state.token) {
-        navigate("/");
+        navigate("/", { replace: true });
+        toastHandler("success", `LogIn Success, Welcome `);
       }
     } catch (error) {
+      console.log("error");
       dispatch({ type: "SET_USER_ERROR", payload: error });
+      toastHandler("error", "Invalid Login Credentials");
     } finally {
       setIsLoading(false);
     }
@@ -115,7 +117,6 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
         token: "",
       },
     });
-    dispatch({ type: "SET_USERS", payload: [] });
     localStorage.removeItem("userCredentials");
     navigate("/login");
     toastHandler("success", "Logout Success");
@@ -124,22 +125,6 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     getAllUsersHandler();
   }, []);
-
-  useEffect(() => {
-    if (state.error) {
-      toastHandler("error", "Invalid LogIn Credentials");
-    }
-    if (state.token) {
-      navigate("/");
-      toastHandler(
-        "success",
-        `LogIn Success, Welcome ${state.user.firstName} ${state.user.lastName}`
-      );
-    }
-    if (!state.token && !state.error) {
-      navigate("/login");
-    }
-  }, [state.token, state.error]);
 
   return (
     <UserContext.Provider

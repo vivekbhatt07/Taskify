@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useMode, useProject, useUser } from "../../context";
 import { TolltipIconAction, IconButton } from "../../components";
 import { Person, Logout } from "@mui/icons-material";
+import TaskifyLogo from "../../assets/image/logo/taskify.png";
 
 import "./Header.css";
 import { Popover } from "@mui/material";
@@ -31,7 +32,12 @@ const Header = () => {
     >
       <div className="flex justify-between items-center">
         <h1>
-          <Link to="/">Taskify</Link>
+          <Link to="/">
+            {" "}
+            <div className="w-[100px] mx-auto rounded-md overflow-hidden">
+              <img src={TaskifyLogo} alt="logo" />
+            </div>
+          </Link>
         </h1>
 
         <div className="flex gap-3 items-center">

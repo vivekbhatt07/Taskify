@@ -4,6 +4,7 @@ import AutoCompleteWithChips from "./AutoCompleteWithChips";
 import { DarkLoader, LightLoader } from "./Loader";
 import DoughnutProvider from "./DoughnutProvider";
 import BarProvider from "./BarProvider";
+import EmptyListCard from "./EmptyListCard";
 
 export {
   IconButton,
@@ -15,4 +16,5 @@ export {
   DarkLoader,
   DoughnutProvider,
   BarProvider,
+  EmptyListCard,
 };
