@@ -82,10 +82,6 @@ const SignUp = () => {
 
   return (
     <PageContainer>
-      <div className="hidden absolute top-0 left-0 w-[700px] h-[700px] rounded-full bg-stone-900 -translate-x-1/2 -translate-y-1/2 lg:flex justify-center items-center dark:bg-stone-800">
-        <div className="w-[400px] h-[400px] bg-stone-700 rounded-full dark:bg-stone-600"></div>
-      </div>
-
       <div className="flex flex-col pt-14 gap-8">
         <h1 className="text-center text-2xl">
           <div className="w-[100px] mx-auto rounded-md overflow-hidden">

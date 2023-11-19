@@ -34,7 +34,7 @@ const Header = () => {
         <h1>
           <Link to="/">
             {" "}
-            <div className="w-[80px] mx-auto rounded-md overflow-hidden">
+            <div className="w-[60px] mx-auto rounded-md overflow-hidden">
               <img src={TaskifyLogo} alt="logo" />
             </div>
           </Link>
