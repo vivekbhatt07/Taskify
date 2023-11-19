@@ -1,15 +1,24 @@
 import { BarProvider } from "../../../../components";
-import { useTask } from "../../../../context";
+import { useMode, useTask } from "../../../../context";
 
 const BarTab = () => {
   const { state } = useTask();
-
+  const { isDarkTheme } = useMode();
   const options = {
+    maintainAspectRatio: false,
     scales: {
       y: {
         ticks: {
           stepSize: 1,
           beganAtZero: true,
+        },
+        grid: {
+          color: isDarkTheme ? "#282828" : "#ddd",
+        },
+      },
+      x: {
+        grid: {
+          color: isDarkTheme ? "#282828" : "#ddd",
         },
       },
     },
@@ -22,6 +31,12 @@ const BarTab = () => {
     plugins: {
       legend: {
         position: "top" as const,
+        labels: {
+          usePointStyle: true,
+          pointStyle: "rectRounded",
+          color: isDarkTheme ? "#fff" : "#282828",
+          padding: 20,
+        },
       },
       title: {
         display: true,
@@ -83,7 +98,7 @@ const BarTab = () => {
     ],
   };
   return (
-    <div className="w-[full] h-[full]">
+    <div className="w-[full] h-[400px]">
       <BarProvider options={options} data={data} />
     </div>
   );

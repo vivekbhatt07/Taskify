@@ -1,12 +1,7 @@
 import { FC } from "react";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  ChartOptions,
-} from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import { useMode } from "../../context";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -21,6 +16,8 @@ const DoughnutProvider: FC<DoughnutProviderType> = ({
   doughnutLabel,
   doughnutData,
 }) => {
+  const { isDarkTheme } = useMode();
+
   const data: any = {
     labels: doughnutLabel,
     datasets: [
@@ -47,7 +44,7 @@ const DoughnutProvider: FC<DoughnutProviderType> = ({
     ],
   };
 
-  const options: ChartOptions = {
+  const options: any = {
     // responsive: true,
     maintainAspectRatio: false,
     title: {
@@ -55,21 +52,24 @@ const DoughnutProvider: FC<DoughnutProviderType> = ({
       text: "Doughnut Chart",
     },
     plugins: {
+      title: {
+        display: true,
+        text: "Pie Chart",
+      },
       legend: {
         display: true, // Show the legend
-        position: "right", // Position the legend at the top
+        position: "top", // Position the legend at the top
         labels: {
-          boxWidth: 50,
+          usePointStyle: true,
+          pointStyle: "rectRounded",
+          boxWidth: 100,
           boxHeight: 20,
           useBorderRadius: true,
-          borderRadius: 16,
-          color: "#fff",
+          borderRadius: 30,
+          color: isDarkTheme ? "#fff" : "#282828",
           padding: 20,
         },
-        title: {
-          // color: "#282828",
-          // color: "#fff",
-        },
+        title: {},
       },
       tooltip: {
         mode: "index",
@@ -92,7 +92,7 @@ const DoughnutProvider: FC<DoughnutProviderType> = ({
   };
 
   return (
-    <div style={{ width: "100%", minHeight: "300px", margin: "0 auto" }}>
+    <div style={{ width: "100%", minHeight: "400px", margin: "0 auto" }}>
       <Doughnut data={data} options={options} />
     </div>
   );
