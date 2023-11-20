@@ -6,7 +6,8 @@ import "./App.css";
 import { Dashboard, Metrics, Table, Login, SignUp } from "./pages";
 import { DashboardDetail } from "./pages/Dashboard/screens";
 import { useMode } from "./context";
-import RequiresAuth from "./auth/RequiresAuth";
+import PrivateRoute from "./auth/PrivateRoute";
+import PublicRoute from "./auth/PublicRoute";
 
 const darkTheme = createTheme({
   palette: {
@@ -28,40 +29,20 @@ function App() {
       <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
         <CssBaseline />
         <Routes>
-          <Route element={<Login />} path="/login" />
-          <Route element={<SignUp />} path="/signup" />
+          <Route path="/login" element={<PublicRoute element={<Login />} />} />
           <Route
-            element={
-              <RequiresAuth>
-                <Dashboard />
-              </RequiresAuth>
-            }
-            path="/"
+            path="/signup"
+            element={<PublicRoute element={<SignUp />} />}
           />
+          <Route path="/" element={<PrivateRoute element={<Dashboard />} />} />
           <Route
-            element={
-              <RequiresAuth>
-                <Metrics />
-              </RequiresAuth>
-            }
             path="/metrics"
+            element={<PrivateRoute element={<Metrics />} />}
           />
+          <Route path="/table" element={<PrivateRoute element={<Table />} />} />
           <Route
-            element={
-              <RequiresAuth>
-                <Table />
-              </RequiresAuth>
-            }
-            path="/table"
-          />
-
-          <Route
-            element={
-              <RequiresAuth>
-                <DashboardDetail />
-              </RequiresAuth>
-            }
             path="/:projectId"
+            element={<PrivateRoute element={<DashboardDetail />} />}
           />
         </Routes>
       </ThemeProvider>

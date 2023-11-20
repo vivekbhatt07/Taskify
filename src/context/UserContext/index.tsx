@@ -27,7 +27,7 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialUserState);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-
+  console.log(state);
   // GET ALL USERS:
 
   const getAllUsersHandler = async () => {
@@ -97,7 +97,7 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
           },
         });
         if (state.token) {
-          navigate("/");
+          navigate("/", { replace: true });
         }
       }
     } catch (error) {
@@ -118,7 +118,7 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
       },
     });
     localStorage.removeItem("userCredentials");
-    navigate("/login");
+    navigate("/login", { replace: true });
     toastHandler("success", "Logout Success");
   };
 
