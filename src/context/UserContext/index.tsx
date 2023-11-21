@@ -27,11 +27,11 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialUserState);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  console.log(state);
+
   // GET ALL USERS:
 
   const getAllUsersHandler = async () => {
-    // setIsLoading(true);
+    setIsLoading(true);
     try {
       const response = await getAllUsersApiResponse();
       if (response.status === 201) {
@@ -40,7 +40,7 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     } catch (error) {
       console.error(error);
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
