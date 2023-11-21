@@ -1,6 +1,6 @@
-# Task Sync
+# Taskify
 
-[Task-Sync](https://taskify-theta-two.vercel.app/) - Task Managment App
+[Taskify](https://taskify-theta-two.vercel.app/) - Task Managment App
 
 ## How to install and run locally?
 
