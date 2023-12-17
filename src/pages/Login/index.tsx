@@ -129,6 +129,7 @@ const Login = () => {
               <TextButton
                 className="w-full basis-1/2"
                 type="button"
+                disabled={!state.userList[0]?.email}
                 onClick={() => {
                   setLogInFormData({
                     email: state.userList[0].email,
