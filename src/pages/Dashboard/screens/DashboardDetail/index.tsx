@@ -37,6 +37,7 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
     isLoading,
   } = useTask();
   const { dispatch } = useProject();
+
   const { projectId } = useParams();
   const { isDarkTheme } = useMode();
 

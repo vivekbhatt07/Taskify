@@ -90,5 +90,8 @@ export const taskReducer = (
         ),
       };
     }
+    case "CLEAR_TASK_LIST": {
+      return { toDoList: [], inProgressList: [], doneList: [] };
+    }
   }
 };

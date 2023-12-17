@@ -17,7 +17,8 @@ export interface TaskAction {
     | "DELETE_DONE_TASK"
     | "UPDATE_TODO_TASK"
     | "UPDATE_INPROGRESS_TASK"
-    | "UPDATE_DONE_TASK";
+    | "UPDATE_DONE_TASK"
+    | "CLEAR_TASK_LIST";
   payload?: any;
 }
 

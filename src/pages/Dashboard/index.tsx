@@ -1,4 +1,5 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
   TolltipIconAction,
   ModalProvider,
@@ -9,10 +10,14 @@ import { PageContainer } from "../../layout";
 import { ProjectCard } from "./components";
 import { Add } from "@mui/icons-material";
 import ProjectForm from "../../components/ProjectForm";
-import { useMode, useProject } from "../../context";
+import { useMode, useProject, useTask } from "../../context";
+
 interface DashboardProps {}
 
 const Dashboard: FC<DashboardProps> = () => {
+  const location = useLocation();
+  const { dispatch: taskDispatch } = useTask();
+
   const { state, isLoading } = useProject();
   const { isDarkTheme } = useMode();
   const [isAddProjectModalOpen, setIsAddProjectModalOpen] =
@@ -26,6 +31,12 @@ const Dashboard: FC<DashboardProps> = () => {
     gridTemplateColumns: "repeat(auto-fit, minmax(250px, 300px))",
     gap: "32px",
   };
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      taskDispatch({ type: "CLEAR_TASK_LIST" });
+    }
+  }, []);
 
   return (
     <PageContainer>
