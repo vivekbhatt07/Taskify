@@ -42,3 +42,16 @@ $ npm run dev
 
 - Mongo DB
 - Express JS
+  
+![logIn](https://github.com/vivekbhatt07/Taskify/assets/93856336/9d99fec1-e1db-414e-b6aa-fa49be29b5d0)
+
+![signUp](https://github.com/vivekbhatt07/Taskify/assets/93856336/540a6619-bf8e-48f0-80ad-ec4c629877a1)
+
+![01](https://github.com/vivekbhatt07/Taskify/assets/93856336/129ea7ad-d60e-482b-a5e3-cf48f05537da)
+
+![addProject](https://github.com/vivekbhatt07/Taskify/assets/93856336/a8ca1205-58da-4752-bda6-6becb03bb0e8)
+
+![1](https://github.com/vivekbhatt07/Taskify/assets/93856336/c8c2164d-a99b-48b8-a0b9-524fecbf6d5f)
+
+![addTask](https://github.com/vivekbhatt07/Taskify/assets/93856336/b26ff306-266b-4a2a-8395-4f56204aa0e0)
+
