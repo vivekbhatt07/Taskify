@@ -347,7 +347,7 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
               <div className="flex bg-[#ddd] rounded-md overflow-hidden">
                 <TolltipIconAction
                   title="Pie Chart"
-                  position="bottom"
+                  position="left"
                   iconBtnSx={{
                     borderRadius: "0",
                     "&:hover": {
@@ -360,10 +360,9 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
                 >
                   <PieChart />
                 </TolltipIconAction>
-
                 <TolltipIconAction
                   title="Bar Chart"
-                  position="bottom"
+                  position="right"
                   iconBtnSx={{
                     borderRadius: "0",
                     "&:hover": {
@@ -378,8 +377,23 @@ const DashboardDetail: FC<DashboardDetailProps> = () => {
                 </TolltipIconAction>
               </div>
             </div>
-            {activeChart === "Pie" && <DoughnutTaskTab />}
-            <div>{activeChart === "Bar" && <BarTab />}</div>
+            {activeChart === "Pie" &&
+              state.toDoList.length > 0 &&
+              state.inProgressList.length > 0 &&
+              state.doneList.length > 0 && <DoughnutTaskTab />}
+            {!(state.toDoList.length > 0) &&
+              !(state.inProgressList.length > 0) &&
+              !(state.doneList.length > 0) && (
+                <EmptyListCard>
+                  No Data for {activeChart === "Pie" ? "Pie" : "Bar"} Chart
+                </EmptyListCard>
+              )}
+            <div>
+              {activeChart === "Bar" &&
+                state.toDoList.length > 0 &&
+                state.inProgressList.length > 0 &&
+                state.doneList.length > 0 && <BarTab />}
+            </div>
           </div>
         )}
       </div>
